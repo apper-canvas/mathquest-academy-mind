@@ -59,6 +59,7 @@ export default function Home() {
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient">
                 MathQuest Academy
             
+              </h1>
             <div className="flex items-center space-x-3 sm:space-x-4">
               <Link
                 to="/learning-map"
@@ -79,7 +80,6 @@ export default function Home() {
                   className="w-5 h-5 sm:w-6 sm:h-6 text-surface-600 dark:text-surface-300" 
                 />
               </motion.button>
-            </div>
             </motion.button>
           </div>
         </nav>
