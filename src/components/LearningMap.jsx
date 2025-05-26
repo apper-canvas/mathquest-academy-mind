@@ -15,8 +15,8 @@ const WORLDS_DATA = {
     description: 'Master the art of adding numbers',
     levels: [
       { id: 1, name: 'Basic Addition', difficulty: 'Easy', unlocked: true },
-      { id: 2, name: 'Two-Digit Addition', difficulty: 'Medium', unlocked: false },
-      { id: 3, name: 'Addition with Carrying', difficulty: 'Hard', unlocked: false }
+      { id: 2, name: 'Two-Digit Addition', difficulty: 'Medium', unlocked: true },
+      { id: 3, name: 'Addition with Carrying', difficulty: 'Hard', unlocked: true }
     ],
     position: { x: 20, y: 30 }
   },
@@ -29,9 +29,9 @@ const WORLDS_DATA = {
     textColor: 'text-blue-600 dark:text-blue-400',
     description: 'Learn to subtract with confidence',
     levels: [
-      { id: 1, name: 'Basic Subtraction', difficulty: 'Easy', unlocked: false },
-      { id: 2, name: 'Borrowing Basics', difficulty: 'Medium', unlocked: false },
-      { id: 3, name: 'Multi-Digit Subtraction', difficulty: 'Hard', unlocked: false }
+      { id: 1, name: 'Basic Subtraction', difficulty: 'Easy', unlocked: true },
+      { id: 2, name: 'Borrowing Basics', difficulty: 'Medium', unlocked: true },
+      { id: 3, name: 'Multi-Digit Subtraction', difficulty: 'Hard', unlocked: true }
     ],
     position: { x: 40, y: 20 }
   },
@@ -44,9 +44,9 @@ const WORLDS_DATA = {
     textColor: 'text-purple-600 dark:text-purple-400',
     description: 'Conquer the peaks of multiplication',
     levels: [
-      { id: 1, name: 'Times Tables', difficulty: 'Easy', unlocked: false },
-      { id: 2, name: 'Double Digits', difficulty: 'Medium', unlocked: false },
-      { id: 3, name: 'Advanced Multiplication', difficulty: 'Hard', unlocked: false }
+      { id: 1, name: 'Times Tables', difficulty: 'Easy', unlocked: true },
+      { id: 2, name: 'Double Digits', difficulty: 'Medium', unlocked: true },
+      { id: 3, name: 'Advanced Multiplication', difficulty: 'Hard', unlocked: true }
     ],
     position: { x: 60, y: 40 }
   },
@@ -59,9 +59,9 @@ const WORLDS_DATA = {
     textColor: 'text-orange-600 dark:text-orange-400',
     description: 'Navigate through division challenges',
     levels: [
-      { id: 1, name: 'Simple Division', difficulty: 'Easy', unlocked: false },
-      { id: 2, name: 'Division with Remainders', difficulty: 'Medium', unlocked: false },
-      { id: 3, name: 'Long Division', difficulty: 'Hard', unlocked: false }
+      { id: 1, name: 'Simple Division', difficulty: 'Easy', unlocked: true },
+      { id: 2, name: 'Division with Remainders', difficulty: 'Medium', unlocked: true },
+      { id: 3, name: 'Long Division', difficulty: 'Hard', unlocked: true }
     ],
     position: { x: 80, y: 25 }
   },
@@ -75,9 +75,8 @@ const WORLDS_DATA = {
     description: 'Explore the magical world of words',
     levels: [
       { id: 1, name: 'Phonics Fundamentals', difficulty: 'Easy', unlocked: true },
-      { id: 2, name: 'Reading Comprehension', difficulty: 'Medium', unlocked: false },
-      { id: 3, name: 'Advanced Vocabulary', difficulty: 'Hard', unlocked: false }
-    ],
+      { id: 2, name: 'Reading Comprehension', difficulty: 'Medium', unlocked: true },
+      { id: 3, name: 'Advanced Vocabulary', difficulty: 'Hard', unlocked: true }
     position: { x: 25, y: 60 }
   },
   'writing-world': {
@@ -89,9 +88,9 @@ const WORLDS_DATA = {
     textColor: 'text-teal-600 dark:text-teal-400',
     description: 'Create stories and improve writing skills',
     levels: [
-      { id: 1, name: 'Letter Formation', difficulty: 'Easy', unlocked: false },
-      { id: 2, name: 'Sentence Building', difficulty: 'Medium', unlocked: false },
-      { id: 3, name: 'Story Writing', difficulty: 'Hard', unlocked: false }
+      { id: 1, name: 'Letter Formation', difficulty: 'Easy', unlocked: true },
+      { id: 2, name: 'Sentence Building', difficulty: 'Medium', unlocked: true },
+      { id: 3, name: 'Story Writing', difficulty: 'Hard', unlocked: true }
     ],
     position: { x: 50, y: 70 }
   }
