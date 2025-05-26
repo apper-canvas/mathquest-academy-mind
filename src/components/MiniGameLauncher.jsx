@@ -66,7 +66,7 @@ const MINI_GAMES_DATA = {
           'Visualize fractions using concrete models'
         ],
         outcomes: 'Players will develop a deep conceptual understanding of fractions and gain confidence working with fractional quantities in various contexts.',
-        unlocked: false
+        unlocked: true
       },
       {
         id: 'geometry-gems',
@@ -165,7 +165,7 @@ const MINI_GAMES_DATA = {
           'Synthesize information across texts'
         ],
         outcomes: 'Advanced readers will develop sophisticated comprehension strategies and critical thinking skills essential for academic success.',
-        unlocked: false
+        unlocked: true
       }
     ]
   }
