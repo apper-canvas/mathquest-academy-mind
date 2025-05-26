@@ -203,6 +203,7 @@ const SKILL_CONTENT = {
       }
     }
   }
+}
 
 export default function SkillArea() {
   const { skillId, levelId } = useParams()
