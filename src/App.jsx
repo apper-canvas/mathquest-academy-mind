@@ -9,6 +9,7 @@ import LearningMap from './components/LearningMap'
 import SkillArea from './components/SkillArea'
 import MiniGameLauncher from './components/MiniGameLauncher'
 import GameRouter from './components/GameRouter'
+import LearningModules from './components/LearningModules'
 
 
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/skill/:skillId" element={<SkillArea />} />
         <Route path="/mini-games" element={<MiniGameLauncher />} />
         <Route path="/mini-games/:gameId" element={<GameRouter />} />
+        <Route path="/learning-modules" element={<LearningModules />} />
 
 
         <Route path="/skill/:skillId/level/:levelId" element={<SkillArea />} />
