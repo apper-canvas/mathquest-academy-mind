@@ -162,21 +162,24 @@ export default function LearningMap() {
 
   const handleContinueExploring = () => {
     if (!selectedWorld) {
-      toast.error('No world selected');
+      toast.error('Please select a world first!');
       return;
     }
 
     const currentWorldProgress = userProgress[selectedWorld.id];
     
     // Find the next uncompleted level in the current selected world
-    if (currentWorldProgress && currentWorldProgress.unlockedLevels.length > 0) {
+    if (currentWorldProgress && currentWorldProgress.unlockedLevels && currentWorldProgress.unlockedLevels.length > 0) {
+      // Find the first unlocked level that hasn't been completed
       const nextLevel = currentWorldProgress.unlockedLevels.find(levelId => 
         !currentWorldProgress.completedLevels.includes(levelId)
       );
       
       if (nextLevel) {
-        const levelName = selectedWorld.levels.find(l => l.id === nextLevel)?.name || `Level ${nextLevel}`;
+        const levelData = selectedWorld.levels.find(l => l.id === nextLevel);
+        const levelName = levelData?.name || `Level ${nextLevel}`;
         toast.success(`Starting ${levelName} in ${selectedWorld.name}!`);
+        closeWorldDetails();
         navigate(`/skill/${selectedWorld.id}/level/${nextLevel}`);
         return;
       } else {
@@ -186,7 +189,10 @@ export default function LearningMap() {
         // Find another world with available levels
         const availableWorld = Object.keys(WORLDS_DATA).find(worldId => {
           const progress = userProgress[worldId];
-          return worldId !== selectedWorld.id && progress && progress.unlockedLevels.length > 0 && 
+          return worldId !== selectedWorld.id && 
+                 progress && 
+                 progress.unlockedLevels && 
+                 progress.unlockedLevels.length > 0 && 
                  progress.unlockedLevels.some(levelId => !progress.completedLevels.includes(levelId));
         });
         
@@ -199,8 +205,15 @@ export default function LearningMap() {
       }
     }
     
-    // Fallback if no progress data
-    toast.info(`Start your adventure in ${selectedWorld.name}! Click on a level to begin.`);
+    // Fallback: start with first level if no progress data
+    const firstLevel = selectedWorld.levels[0];
+    if (firstLevel) {
+      toast.success(`Starting your adventure in ${selectedWorld.name}!`);
+      closeWorldDetails();
+      navigate(`/skill/${selectedWorld.id}/level/${firstLevel.id}`);
+    } else {
+      toast.error('No levels available in this world.');
+    }
   }
 
 
