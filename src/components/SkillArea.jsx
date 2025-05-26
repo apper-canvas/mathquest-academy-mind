@@ -38,6 +38,105 @@ const SKILL_CONTENT = {
       }
     }
   },
+  'subtraction-world': {
+    name: 'Subtraction Valley',
+    icon: 'Minus',
+    color: 'from-blue-400 to-blue-600',
+    levels: {
+      1: {
+        name: 'Basic Subtraction',
+        questions: [
+          { question: '10 - 3 = ?', options: [6, 7, 8, 9], correct: 1, points: 10 },
+          { question: '15 - 6 = ?', options: [8, 9, 10, 11], correct: 1, points: 10 },
+          { question: '20 - 7 = ?', options: [12, 13, 14, 15], correct: 1, points: 10 },
+          { question: '18 - 9 = ?', options: [8, 9, 10, 11], correct: 1, points: 10 },
+          { question: '14 - 5 = ?', options: [8, 9, 10, 11], correct: 1, points: 10 }
+        ]
+      },
+      2: {
+        name: 'Borrowing Basics',
+        questions: [
+          { question: '32 - 15 = ?', options: [16, 17, 18, 19], correct: 1, points: 15 },
+          { question: '45 - 27 = ?', options: [17, 18, 19, 20], correct: 1, points: 15 },
+          { question: '63 - 38 = ?', options: [24, 25, 26, 27], correct: 1, points: 15 }
+        ]
+      },
+      3: {
+        name: 'Multi-Digit Subtraction',
+        questions: [
+          { question: '100 - 47 = ?', options: [52, 53, 54, 55], correct: 1, points: 20 },
+          { question: '85 - 39 = ?', options: [45, 46, 47, 48], correct: 1, points: 20 },
+          { question: '76 - 28 = ?', options: [47, 48, 49, 50], correct: 1, points: 20 }
+        ]
+      }
+    }
+  },
+  'multiplication-world': {
+    name: 'Multiplication Mountains',
+    icon: 'X',
+    color: 'from-purple-400 to-purple-600',
+    levels: {
+      1: {
+        name: 'Times Tables',
+        questions: [
+          { question: '3 × 4 = ?', options: [10, 11, 12, 13], correct: 2, points: 10 },
+          { question: '5 × 6 = ?', options: [25, 28, 30, 32], correct: 2, points: 10 },
+          { question: '7 × 8 = ?', options: [54, 56, 58, 60], correct: 1, points: 10 },
+          { question: '9 × 3 = ?', options: [25, 26, 27, 28], correct: 2, points: 10 },
+          { question: '4 × 7 = ?', options: [26, 27, 28, 29], correct: 2, points: 10 }
+        ]
+      },
+      2: {
+        name: 'Double Digits',
+        questions: [
+          { question: '12 × 3 = ?', options: [34, 35, 36, 37], correct: 2, points: 15 },
+          { question: '15 × 4 = ?', options: [58, 59, 60, 61], correct: 2, points: 15 },
+          { question: '18 × 2 = ?', options: [34, 35, 36, 37], correct: 2, points: 15 }
+        ]
+      },
+      3: {
+        name: 'Advanced Multiplication',
+        questions: [
+          { question: '23 × 4 = ?', options: [90, 91, 92, 93], correct: 2, points: 20 },
+          { question: '17 × 5 = ?', options: [83, 84, 85, 86], correct: 2, points: 20 },
+          { question: '26 × 3 = ?', options: [76, 77, 78, 79], correct: 2, points: 20 }
+        ]
+      }
+    }
+  },
+  'division-world': {
+    name: 'Division Desert',
+    icon: 'Divide',
+    color: 'from-orange-400 to-orange-600',
+    levels: {
+      1: {
+        name: 'Simple Division',
+        questions: [
+          { question: '12 ÷ 3 = ?', options: [3, 4, 5, 6], correct: 1, points: 10 },
+          { question: '20 ÷ 4 = ?', options: [4, 5, 6, 7], correct: 1, points: 10 },
+          { question: '18 ÷ 6 = ?', options: [2, 3, 4, 5], correct: 1, points: 10 },
+          { question: '15 ÷ 5 = ?', options: [2, 3, 4, 5], correct: 1, points: 10 },
+          { question: '24 ÷ 8 = ?', options: [2, 3, 4, 5], correct: 1, points: 10 }
+        ]
+      },
+      2: {
+        name: 'Division with Remainders',
+        questions: [
+          { question: '13 ÷ 4 = ? remainder ?', options: ['3 r 1', '3 r 2', '4 r 1', '2 r 5'], correct: 0, points: 15 },
+          { question: '17 ÷ 5 = ? remainder ?', options: ['3 r 2', '4 r 1', '3 r 1', '2 r 7'], correct: 0, points: 15 },
+          { question: '22 ÷ 7 = ? remainder ?', options: ['3 r 1', '3 r 2', '4 r 1', '2 r 8'], correct: 0, points: 15 }
+        ]
+      },
+      3: {
+        name: 'Long Division',
+        questions: [
+          { question: '144 ÷ 12 = ?', options: [11, 12, 13, 14], correct: 1, points: 20 },
+          { question: '156 ÷ 13 = ?', options: [11, 12, 13, 14], correct: 1, points: 20 },
+          { question: '168 ÷ 14 = ?', options: [11, 12, 13, 14], correct: 1, points: 20 }
+        ]
+      }
+    }
+  },
   'reading-world': {
     name: 'Reading Realm',
     icon: 'BookOpen',
@@ -70,8 +169,40 @@ const SKILL_CONTENT = {
         ]
       }
     }
+  },
+  'writing-world': {
+    name: 'Writing Woods',
+    icon: 'PenTool',
+    color: 'from-teal-400 to-teal-600',
+    levels: {
+      1: {
+        name: 'Letter Formation',
+        questions: [
+          { question: 'Which letter comes after "M" in the alphabet?', options: ['L', 'N', 'O', 'P'], correct: 1, points: 10 },
+          { question: 'How many letters are in the word "CAT"?', options: ['2', '3', '4', '5'], correct: 1, points: 10 },
+          { question: 'Which letter is a vowel?', options: ['B', 'C', 'A', 'D'], correct: 2, points: 10 },
+          { question: 'What letter does "Apple" start with?', options: ['A', 'P', 'L', 'E'], correct: 0, points: 10 },
+          { question: 'Which word is spelled correctly?', options: ['Kat', 'Cat', 'Cta', 'Act'], correct: 1, points: 10 }
+        ]
+      },
+      2: {
+        name: 'Sentence Building',
+        questions: [
+          { question: 'What comes at the end of a sentence?', options: ['Comma', 'Period', 'Question mark', 'All of these'], correct: 3, points: 15 },
+          { question: 'Which word should be capitalized?', options: ['the', 'john', 'and', 'to'], correct: 1, points: 15 },
+          { question: 'Complete the sentence: "The ___ is red."', options: ['dog', 'run', 'happy', 'quickly'], correct: 0, points: 15 }
+        ]
+      },
+      3: {
+        name: 'Story Writing',
+        questions: [
+          { question: 'What is the beginning of a story called?', options: ['Middle', 'Introduction', 'Conclusion', 'Title'], correct: 1, points: 20 },
+          { question: 'Which describes a character\'s feelings?', options: ['The house was big', 'She felt happy', 'It was raining', 'The car was fast'], correct: 1, points: 20 },
+          { question: 'What makes a good story ending?', options: ['It stops suddenly', 'It solves the problem', 'It asks questions', 'It changes the topic'], correct: 1, points: 20 }
+        ]
+      }
+    }
   }
-}
 
 export default function SkillArea() {
   const { skillId, levelId } = useParams()
