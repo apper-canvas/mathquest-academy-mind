@@ -80,7 +80,8 @@ export default function Home() {
                   className="w-5 h-5 sm:w-6 sm:h-6 text-surface-600 dark:text-surface-300" 
                 />
               </motion.button>
-            </motion.button>
+            </div>
+          </div>
           </div>
         </nav>
       </header>
