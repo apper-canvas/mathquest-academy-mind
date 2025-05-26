@@ -68,7 +68,15 @@ export default function Home() {
                 <ApperIcon name="BookOpen" className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>Learning Modules</span>
               </Link>
+              <Link
+                to="/reading-modules"
+                className="flex items-center space-x-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg sm:rounded-xl font-medium text-sm sm:text-base shadow-soft hover:shadow-card transition-all duration-300 transform hover:scale-105"
+              >
+                <ApperIcon name="Book" className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Reading Modules</span>
+              </Link>
               
+
 
               <Link
                 to="/mini-games"
