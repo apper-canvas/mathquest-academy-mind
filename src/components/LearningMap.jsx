@@ -389,6 +389,8 @@ export default function LearningMap() {
             
             return (
               <div
+                key={world.id}
+
                 className={`p-4 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer hover:shadow-card ${
                   isUnlocked
                     ? 'bg-white/70 dark:bg-surface-800/70 border-white/20 dark:border-surface-700/50 shadow-soft'
@@ -551,7 +553,6 @@ export default function LearningMap() {
               })}
             </div>
 
-            <div className="mt-6 pt-6 border-t border-surface-200 dark:border-surface-700">
             <div className="mt-6 pt-6 border-t border-surface-200 dark:border-surface-700">
               <button
                 onClick={handleContinueExploring}
