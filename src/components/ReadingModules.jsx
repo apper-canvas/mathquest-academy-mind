@@ -380,7 +380,8 @@ export default function ReadingModules() {
       setCurrentExercise(currentExercise + 1)
       setUserAnswer('')
       setShowResult(false)
-      setStoryText('')n      setSelectedOptions([])
+      setStoryText('');
+
     } else {
       setExerciseComplete(true)
       const percentage = Math.round((correctAnswers / level.exercises.length) * 100)
