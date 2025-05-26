@@ -109,14 +109,18 @@ export default function LearningMap() {
     if (savedProgress) {
       setUserProgress(JSON.parse(savedProgress))
     } else {
-      // Initialize with basic unlocked content
+      // Initialize with all worlds and levels unlocked
       const initialProgress = {
-        'addition-world': { unlockedLevels: [1], completedLevels: [], totalScore: 0 },
-        'reading-world': { unlockedLevels: [1], completedLevels: [], totalScore: 0 }
+        'addition-world': { unlockedLevels: [1, 2, 3], completedLevels: [], totalScore: 0 },
+        'subtraction-world': { unlockedLevels: [1, 2, 3], completedLevels: [], totalScore: 0 },
+        'multiplication-world': { unlockedLevels: [1, 2, 3], completedLevels: [], totalScore: 0 },
+        'division-world': { unlockedLevels: [1, 2, 3], completedLevels: [], totalScore: 0 },
+        'reading-world': { unlockedLevels: [1, 2, 3], completedLevels: [], totalScore: 0 },
+        'writing-world': { unlockedLevels: [1, 2, 3], completedLevels: [], totalScore: 0 }
       }
       setUserProgress(initialProgress)
       localStorage.setItem('learningProgress', JSON.stringify(initialProgress))
-    }
+
   }, [])
 
   const isWorldUnlocked = (worldId) => {
