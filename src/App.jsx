@@ -3,10 +3,15 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
+import LearningMap from './components/LearningMap'
+import SkillArea from './components/SkillArea'
+
 
 function App() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900">
+        <Route path="/" element={<Home />} />
+        <Route path="/learning-map" element={<LearningMap />} />
+        <Route path="/skill/:skillId" element={<SkillArea />} />
+        <Route path="/skill/:skillId/level/:levelId" element={<SkillArea />} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />

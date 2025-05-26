@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import MainFeature from '../components/MainFeature'
+import { Link } from 'react-router-dom'
+
 import ApperIcon from '../components/ApperIcon'
 
 export default function Home() {
@@ -56,19 +58,28 @@ export default function Home() {
               </div>
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient">
                 MathQuest Academy
-              </h1>
-            </motion.div>
             
-            <motion.button
-              onClick={toggleDarkMode}
-              className="p-2 sm:p-3 rounded-xl bg-white/80 dark:bg-surface-800/80 backdrop-blur-sm shadow-soft hover:shadow-card transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <ApperIcon 
-                name={darkMode ? 'Sun' : 'Moon'} 
-                className="w-5 h-5 sm:w-6 sm:h-6 text-surface-600 dark:text-surface-300" 
-              />
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <Link
+                to="/learning-map"
+                className="flex items-center space-x-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-primary to-accent text-white rounded-lg sm:rounded-xl font-medium text-sm sm:text-base shadow-soft hover:shadow-card transition-all duration-300 transform hover:scale-105"
+              >
+                <ApperIcon name="Map" className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Learning Map</span>
+              </Link>
+              
+              <motion.button
+                onClick={toggleDarkMode}
+                className="p-2 sm:p-3 rounded-xl bg-white/80 dark:bg-surface-800/80 backdrop-blur-sm shadow-soft hover:shadow-card transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ApperIcon 
+                  name={darkMode ? 'Sun' : 'Moon'} 
+                  className="w-5 h-5 sm:w-6 sm:h-6 text-surface-600 dark:text-surface-300" 
+                />
+              </motion.button>
+            </div>
             </motion.button>
           </div>
         </nav>
