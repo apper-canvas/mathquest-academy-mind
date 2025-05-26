@@ -125,8 +125,9 @@ export default function LearningMap() {
   }, [])
 
   const isWorldUnlocked = (worldId) => {
-    return userProgress[worldId] && userProgress[worldId].unlockedLevels.length > 0
+    return true
   }
+
 
   const getWorldProgress = (worldId) => {
     const progress = userProgress[worldId]
@@ -401,7 +402,8 @@ export default function LearningMap() {
                     ? 'bg-white/70 dark:bg-surface-800/70 border-white/20 dark:border-surface-700/50 shadow-soft'
                     : 'bg-white/50 dark:bg-surface-800/50 border-gray-200/60 dark:border-gray-700/60 shadow-soft hover:bg-white/60 dark:hover:bg-surface-800/60'
                 }`}
-                onClick={() => isUnlocked && handleWorldClick(world)}
+                onClick={() => handleWorldClick(world)}
+
               >
                 <div className="flex items-center space-x-3 mb-3">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
