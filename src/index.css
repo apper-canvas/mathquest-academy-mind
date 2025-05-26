@@ -43,6 +43,11 @@
   }
 }
 
+  .btn-text-black {
+    @apply text-black dark:text-white;
+  }
+
+
 /* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {
   width: 8px;
