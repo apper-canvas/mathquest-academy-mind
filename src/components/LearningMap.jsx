@@ -561,7 +561,6 @@ export default function LearningMap() {
                 Continue Exploring
               </button>
             </div>
-            </div>
           </motion.div>
         </motion.div>
       )}
