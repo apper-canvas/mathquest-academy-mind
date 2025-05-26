@@ -176,6 +176,7 @@ export default function LearningMap() {
       'writing-world': 'writing'
     };
 
+
     const skillId = worldToSkillMap[selectedWorld.id];
     if (!skillId) {
       toast.error('Skill area not available for this world.');
