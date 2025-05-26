@@ -265,7 +265,28 @@ export default function SkillArea() {
             
             {parseInt(levelId) < Object.keys(skillData.levels).length && (
               <button
-                onClick={() => navigate(`/skill/${skillId}/level/${parseInt(levelId) + 1}`)}
+                onClick={() => {
+                  const nextLevelId = parseInt(levelId) + 1;
+                  const savedProgress = localStorage.getItem('learningProgress');
+                  const progress = savedProgress ? JSON.parse(savedProgress) : {};
+                  
+                  // Check if next level exists
+                  if (!skillData.levels[nextLevelId]) {
+                    toast.error('No more levels available in this skill area!');
+                    return;
+                  }
+                  
+                  // Check if next level is unlocked
+                  const skillProgress = progress[skillId];
+                  if (!skillProgress || !skillProgress.unlockedLevels.includes(nextLevelId)) {
+                    toast.warning(`Level ${nextLevelId} is locked! Complete more challenges to unlock it.`);
+                    return;
+                  }
+                  
+                  // Success - navigate to next level
+                  toast.success(`Starting Level ${nextLevelId}: ${skillData.levels[nextLevelId].name}!`);
+                  navigate(`/skill/${skillId}/level/${nextLevelId}`);
+                }}
                 className="w-full py-3 px-6 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold shadow-game hover:shadow-floating transition-all duration-300 flex items-center justify-center space-x-2"
               >
                 <ApperIcon name="ArrowRight" className="w-5 h-5" />
