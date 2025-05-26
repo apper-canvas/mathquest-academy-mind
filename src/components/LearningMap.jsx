@@ -77,6 +77,7 @@ const WORLDS_DATA = {
       { id: 1, name: 'Phonics Fundamentals', difficulty: 'Easy', unlocked: true },
       { id: 2, name: 'Reading Comprehension', difficulty: 'Medium', unlocked: true },
       { id: 3, name: 'Advanced Vocabulary', difficulty: 'Hard', unlocked: true }
+    ],
     position: { x: 25, y: 60 }
   },
   'writing-world': {
