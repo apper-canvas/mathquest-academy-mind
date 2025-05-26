@@ -161,55 +161,48 @@ export default function LearningMap() {
   }
 
   const handleContinueExploring = () => {
-    const currentWorldProgress = userProgress[selectedWorld.id]
+    if (!selectedWorld) {
+      toast.error('No world selected');
+      return;
+    }
+
+    const currentWorldProgress = userProgress[selectedWorld.id];
     
-    // Check if there are unlocked levels in current world
+    // Find the next uncompleted level in the current selected world
     if (currentWorldProgress && currentWorldProgress.unlockedLevels.length > 0) {
       const nextLevel = currentWorldProgress.unlockedLevels.find(levelId => 
         !currentWorldProgress.completedLevels.includes(levelId)
-      )
+      );
       
       if (nextLevel) {
-        toast.success(`Starting ${selectedWorld.levels.find(l => l.id === nextLevel)?.name}!`)
-        navigate(`/skill/${selectedWorld.id}/level/${nextLevel}`)
-        return
+        const levelName = selectedWorld.levels.find(l => l.id === nextLevel)?.name || `Level ${nextLevel}`;
+        toast.success(`Starting ${levelName} in ${selectedWorld.name}!`);
+        navigate(`/skill/${selectedWorld.id}/level/${nextLevel}`);
+        return;
+      } else {
+        // All levels in current world are completed
+        toast.success(`Congratulations! You've completed all levels in ${selectedWorld.name}!`);
+        
+        // Find another world with available levels
+        const availableWorld = Object.keys(WORLDS_DATA).find(worldId => {
+          const progress = userProgress[worldId];
+          return worldId !== selectedWorld.id && progress && progress.unlockedLevels.length > 0 && 
+                 progress.unlockedLevels.some(levelId => !progress.completedLevels.includes(levelId));
+        });
+        
+        if (availableWorld) {
+          toast.info(`Try exploring ${WORLDS_DATA[availableWorld].name} for more adventures!`);
+        } else {
+          toast.info('Amazing! You\'ve completed all available content!');
+        }
+        return;
       }
     }
     
-    // Find next unlocked world
-    const worldIds = Object.keys(WORLDS_DATA)
-    const currentIndex = worldIds.indexOf(selectedWorld.id)
-    
-    for (let i = currentIndex + 1; i < worldIds.length; i++) {
-      const worldId = worldIds[i]
-      if (isWorldUnlocked(worldId)) {
-        toast.success(`Exploring ${WORLDS_DATA[worldId].name}!`)
-        setSelectedWorld(WORLDS_DATA[worldId])
-        return
-      }
-    }
-    
-    // Check for any unlocked world if no next world available
-    const availableWorld = worldIds.find(worldId => {
-      const progress = userProgress[worldId]
-      return progress && progress.unlockedLevels.length > 0 && 
-             progress.unlockedLevels.some(levelId => !progress.completedLevels.includes(levelId))
-    })
-    
-    if (availableWorld && availableWorld !== selectedWorld.id) {
-      toast.success(`Switching to ${WORLDS_DATA[availableWorld].name}!`)
-      setSelectedWorld(WORLDS_DATA[availableWorld])
-      return
-    }
-    
-    // If no other options, encourage completion or close modal
-    if (currentWorldProgress && currentWorldProgress.unlockedLevels.length > 0) {
-      toast.info('Complete current levels to unlock more adventures!')
-    } else {
-      toast.info('Complete other worlds to unlock new adventures!')
-      closeWorldDetails()
-    }
+    // Fallback if no progress data
+    toast.info(`Start your adventure in ${selectedWorld.name}! Click on a level to begin.`);
   }
+
 
 
   return (
