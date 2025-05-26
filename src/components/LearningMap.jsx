@@ -121,6 +121,7 @@ export default function LearningMap() {
       setUserProgress(initialProgress)
       localStorage.setItem('learningProgress', JSON.stringify(initialProgress))
 
+    }
   }, [])
 
   const isWorldUnlocked = (worldId) => {
