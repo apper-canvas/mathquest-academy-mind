@@ -3,6 +3,9 @@ import NumberNinja from './games/NumberNinja'
 import MultiplicationMaze from './games/MultiplicationMaze'
 import FractionFactory from './games/FractionFactory'
 import GeometryGems from './games/GeometryGems'
+import StoryBuilder from './games/StoryBuilder'
+import PhonicsForest from './games/PhonicsForest'
+import ComprehensionQuest from './games/ComprehensionQuest'
 
 import WordWizard from './games/WordWizard'
 
@@ -13,9 +16,10 @@ const GAME_COMPONENTS = {
   'fraction-factory': FractionFactory,
   'geometry-gems': GeometryGems,
 
-  'story-builder': null, // Placeholder for future implementation
-  'phonics-forest': null, // Placeholder for future implementation
-  'comprehension-quest': null // Locked game
+  'story-builder': StoryBuilder,
+  'phonics-forest': PhonicsForest,
+  'comprehension-quest': ComprehensionQuest
+
 }
 
 export default function GameRouter() {
