@@ -104,7 +104,6 @@ export default function Home() {
       </header>
 
 
-      </header>
 
       {/* Hero Section */}
       <section className="relative py-8 sm:py-12 lg:py-20">
