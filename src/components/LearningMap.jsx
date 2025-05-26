@@ -172,9 +172,10 @@ export default function LearningMap() {
       'subtraction-world': 'subtraction', 
       'multiplication-world': 'multiplication',
       'division-world': 'division',
-      'reading-world': 'reading',
-      'writing-world': 'writing'
+      'reading-world': 'reading-comprehension',
+      'writing-world': 'creative-writing'
     };
+
 
 
     const skillId = worldToSkillMap[selectedWorld.id];
