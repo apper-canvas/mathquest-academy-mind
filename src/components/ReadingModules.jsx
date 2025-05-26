@@ -315,7 +315,8 @@ export default function ReadingModules() {
       case 'detail-question':
       case 'sight-word-flash':
       case 'part-of-speech':
-        isCorrect = userAnswer.toLowerCase() === (exercise.answer || exercise.synonym || exercise.antonym || exercise.word || exercise.mainIdea || exercise.partOfSpeech).toLowerCase()
+        const correctAnswer = exercise.answer || exercise.synonym || exercise.antonym || exercise.word || exercise.mainIdea || exercise.partOfSpeech || '';
+        isCorrect = userAnswer && correctAnswer ? userAnswer.toLowerCase() === correctAnswer.toLowerCase() : false;
         break
       case 'blend-words':
         isCorrect = userAnswer.toLowerCase() === exercise.word.toLowerCase()
