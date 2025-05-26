@@ -166,6 +166,22 @@ export default function LearningMap() {
       return;
     }
 
+    // Map world IDs to skill IDs that match the routing system
+    const worldToSkillMap = {
+      'addition-world': 'addition',
+      'subtraction-world': 'subtraction', 
+      'multiplication-world': 'multiplication',
+      'division-world': 'division',
+      'reading-world': 'reading',
+      'writing-world': 'writing'
+    };
+
+    const skillId = worldToSkillMap[selectedWorld.id];
+    if (!skillId) {
+      toast.error('Skill area not available for this world.');
+      return;
+    }
+
     const currentWorldProgress = userProgress[selectedWorld.id];
     
     // Find the next uncompleted level in the current selected world
@@ -180,7 +196,7 @@ export default function LearningMap() {
         const levelName = levelData?.name || `Level ${nextLevel}`;
         toast.success(`Starting ${levelName} in ${selectedWorld.name}!`);
         closeWorldDetails();
-        navigate(`/skill/${selectedWorld.id}/level/${nextLevel}`);
+        navigate(`/skill/${skillId}/level/${nextLevel}`);
         return;
       } else {
         // All levels in current world are completed
@@ -189,7 +205,9 @@ export default function LearningMap() {
         // Find another world with available levels
         const availableWorld = Object.keys(WORLDS_DATA).find(worldId => {
           const progress = userProgress[worldId];
+          const availableSkillId = worldToSkillMap[worldId];
           return worldId !== selectedWorld.id && 
+                 availableSkillId &&
                  progress && 
                  progress.unlockedLevels && 
                  progress.unlockedLevels.length > 0 && 
@@ -210,11 +228,12 @@ export default function LearningMap() {
     if (firstLevel) {
       toast.success(`Starting your adventure in ${selectedWorld.name}!`);
       closeWorldDetails();
-      navigate(`/skill/${selectedWorld.id}/level/${firstLevel.id}`);
+      navigate(`/skill/${skillId}/level/${firstLevel.id}`);
     } else {
       toast.error('No levels available in this world.');
     }
   }
+
 
 
 
