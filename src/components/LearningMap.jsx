@@ -154,6 +154,58 @@ export default function LearningMap() {
     setShowWorldDetails(false)
   }
 
+  const handleContinueExploring = () => {
+    const currentWorldProgress = userProgress[selectedWorld.id]
+    
+    // Check if there are unlocked levels in current world
+    if (currentWorldProgress && currentWorldProgress.unlockedLevels.length > 0) {
+      const nextLevel = currentWorldProgress.unlockedLevels.find(levelId => 
+        !currentWorldProgress.completedLevels.includes(levelId)
+      )
+      
+      if (nextLevel) {
+        toast.success(`Starting ${selectedWorld.levels.find(l => l.id === nextLevel)?.name}!`)
+        navigate(`/skill/${selectedWorld.id}/level/${nextLevel}`)
+        return
+      }
+    }
+    
+    // Find next unlocked world
+    const worldIds = Object.keys(WORLDS_DATA)
+    const currentIndex = worldIds.indexOf(selectedWorld.id)
+    
+    for (let i = currentIndex + 1; i < worldIds.length; i++) {
+      const worldId = worldIds[i]
+      if (isWorldUnlocked(worldId)) {
+        toast.success(`Exploring ${WORLDS_DATA[worldId].name}!`)
+        setSelectedWorld(WORLDS_DATA[worldId])
+        return
+      }
+    }
+    
+    // Check for any unlocked world if no next world available
+    const availableWorld = worldIds.find(worldId => {
+      const progress = userProgress[worldId]
+      return progress && progress.unlockedLevels.length > 0 && 
+             progress.unlockedLevels.some(levelId => !progress.completedLevels.includes(levelId))
+    })
+    
+    if (availableWorld && availableWorld !== selectedWorld.id) {
+      toast.success(`Switching to ${WORLDS_DATA[availableWorld].name}!`)
+      setSelectedWorld(WORLDS_DATA[availableWorld])
+      return
+    }
+    
+    // If no other options, encourage completion or close modal
+    if (currentWorldProgress && currentWorldProgress.unlockedLevels.length > 0) {
+      toast.info('Complete current levels to unlock more adventures!')
+    } else {
+      toast.info('Complete other worlds to unlock new adventures!')
+      closeWorldDetails()
+    }
+  }
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900">
       {/* Header */}
@@ -501,12 +553,14 @@ export default function LearningMap() {
             </div>
 
             <div className="mt-6 pt-6 border-t border-surface-200 dark:border-surface-700">
+            <div className="mt-6 pt-6 border-t border-surface-200 dark:border-surface-700">
               <button
-                onClick={closeWorldDetails}
+                onClick={handleContinueExploring}
                 className="w-full py-3 px-6 bg-gradient-to-r from-primary to-accent text-white rounded-xl font-semibold shadow-game hover:shadow-floating transition-all duration-300"
               >
                 Continue Exploring
               </button>
+            </div>
             </div>
           </motion.div>
         </motion.div>
