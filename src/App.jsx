@@ -8,12 +8,13 @@ import SkillArea from './components/SkillArea'
 
 
 function App() {
+  return (
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-900">
+      <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/learning-map" element={<LearningMap />} />
         <Route path="/skill/:skillId" element={<SkillArea />} />
         <Route path="/skill/:skillId/level/:levelId" element={<SkillArea />} />
-      <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       
