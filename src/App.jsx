@@ -5,6 +5,8 @@ import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import LearningMap from './components/LearningMap'
 import SkillArea from './components/SkillArea'
+import MiniGameLauncher from './components/MiniGameLauncher'
+
 
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/learning-map" element={<LearningMap />} />
         <Route path="/skill/:skillId" element={<SkillArea />} />
+        <Route path="/mini-games" element={<MiniGameLauncher />} />
+
         <Route path="/skill/:skillId/level/:levelId" element={<SkillArea />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
