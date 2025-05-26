@@ -168,13 +168,14 @@ export default function LearningMap() {
 
     // Map world IDs to skill IDs that match the routing system
     const worldToSkillMap = {
-      'addition-world': 'addition',
-      'subtraction-world': 'subtraction', 
-      'multiplication-world': 'multiplication',
-      'division-world': 'division',
-      'reading-world': 'reading-comprehension',
-      'writing-world': 'creative-writing'
+      'addition-world': 'addition-world',
+      'subtraction-world': 'subtraction-world', 
+      'multiplication-world': 'multiplication-world',
+      'division-world': 'division-world',
+      'reading-world': 'reading-world',
+      'writing-world': 'writing-world'
     };
+
 
 
 
