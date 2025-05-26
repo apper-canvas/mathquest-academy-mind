@@ -10,6 +10,7 @@ import SkillArea from './components/SkillArea'
 import MiniGameLauncher from './components/MiniGameLauncher'
 import GameRouter from './components/GameRouter'
 import ReadingModules from './components/ReadingModules'
+import LearningModules from './components/LearningModules'
 
 
 
