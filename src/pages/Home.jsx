@@ -99,7 +99,8 @@ export default function Home() {
                 />
               </motion.button>
             </div>
-          </div>
+        </nav>
+
         </nav>
 
       </header>
