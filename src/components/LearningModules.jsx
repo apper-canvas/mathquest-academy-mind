@@ -23,36 +23,100 @@ export default function LearningModules() {
       level: 'Beginner',
       exercises: [
         {
-          id: 'addition',
-          title: 'Addition Practice',
+          id: 'addition-1',
+          title: 'Basic Addition',
           type: 'calculation',
           problem: '25 + 17 = ?',
           answer: '42',
           tutorial: 'When adding numbers, line them up by place value and add from right to left.'
         },
         {
-          id: 'subtraction',
-          title: 'Subtraction Practice',
+          id: 'addition-2',
+          title: 'Addition with Carrying',
+          type: 'calculation',
+          problem: '37 + 48 = ?',
+          answer: '85',
+          tutorial: 'When the sum of a column is 10 or more, carry the tens digit to the next column.'
+        },
+        {
+          id: 'addition-3',
+          title: 'Three-Digit Addition',
+          type: 'calculation',
+          problem: '234 + 189 = ?',
+          answer: '423',
+          tutorial: 'Add each column separately, carrying when necessary.'
+        },
+        {
+          id: 'subtraction-1',
+          title: 'Basic Subtraction',
           type: 'calculation',
           problem: '68 - 29 = ?',
           answer: '39',
           tutorial: 'For subtraction, you may need to borrow from the next place value.'
         },
         {
-          id: 'multiplication',
-          title: 'Multiplication Practice',
+          id: 'subtraction-2',
+          title: 'Subtraction with Borrowing',
+          type: 'calculation',
+          problem: '100 - 47 = ?',
+          answer: '53',
+          tutorial: 'When subtracting from zero, borrow from the next non-zero digit.'
+        },
+        {
+          id: 'subtraction-3',
+          title: 'Three-Digit Subtraction',
+          type: 'calculation',
+          problem: '502 - 238 = ?',
+          answer: '264',
+          tutorial: 'Work column by column, borrowing when the top digit is smaller.'
+        },
+        {
+          id: 'multiplication-1',
+          title: 'Basic Multiplication',
           type: 'calculation',
           problem: '8 × 7 = ?',
           answer: '56',
           tutorial: 'Multiplication is repeated addition. 8 × 7 means adding 8 seven times.'
         },
         {
-          id: 'division',
-          title: 'Division Practice',
+          id: 'multiplication-2',
+          title: 'Two-Digit Multiplication',
+          type: 'calculation',
+          problem: '15 × 6 = ?',
+          answer: '90',
+          tutorial: 'Multiply each digit separately: (10 × 6) + (5 × 6) = 60 + 30 = 90.'
+        },
+        {
+          id: 'multiplication-3',
+          title: 'Multiplication by 10s',
+          type: 'calculation',
+          problem: '23 × 30 = ?',
+          answer: '690',
+          tutorial: 'When multiplying by 10, 100, etc., add zeros to the end.'
+        },
+        {
+          id: 'division-1',
+          title: 'Basic Division',
           type: 'calculation',
           problem: '84 ÷ 12 = ?',
           answer: '7',
           tutorial: 'Division asks: how many times does 12 go into 84?'
+        },
+        {
+          id: 'division-2',
+          title: 'Division with Remainders',
+          type: 'calculation',
+          problem: '45 ÷ 7 = ? remainder ?',
+          answer: '6 remainder 3',
+          tutorial: '7 goes into 45 six times (42), with 3 left over.'
+        },
+        {
+          id: 'mixed-operations',
+          title: 'Mixed Operations',
+          type: 'calculation',
+          problem: '5 + 3 × 4 = ?',
+          answer: '17',
+          tutorial: 'Follow order of operations: multiply first (3 × 4 = 12), then add (5 + 12 = 17).'
         }
       ]
     },
@@ -65,7 +129,7 @@ export default function LearningModules() {
       level: 'Intermediate',
       exercises: [
         {
-          id: 'fraction-basics',
+          id: 'fraction-basics-1',
           title: 'Understanding Fractions',
           type: 'visual',
           problem: 'What fraction is shaded in the circle divided into 8 parts with 3 parts shaded?',
@@ -73,20 +137,76 @@ export default function LearningModules() {
           tutorial: 'A fraction shows parts of a whole. The bottom number (denominator) shows total parts, the top (numerator) shows selected parts.'
         },
         {
-          id: 'fraction-addition',
-          title: 'Adding Fractions',
+          id: 'fraction-basics-2',
+          title: 'Equivalent Fractions',
+          type: 'calculation',
+          problem: 'Which fraction is equivalent to 1/2?',
+          answer: '2/4',
+          tutorial: 'Equivalent fractions represent the same amount. Multiply or divide both parts by the same number.'
+        },
+        {
+          id: 'fraction-addition-1',
+          title: 'Adding Fractions (Same Denominator)',
           type: 'calculation',
           problem: '1/4 + 2/4 = ?',
           answer: '3/4',
           tutorial: 'When adding fractions with the same denominator, add the numerators and keep the denominator.'
         },
         {
-          id: 'decimal-conversion',
+          id: 'fraction-addition-2',
+          title: 'Adding Fractions (Different Denominators)',
+          type: 'calculation',
+          problem: '1/3 + 1/6 = ?',
+          answer: '1/2',
+          tutorial: 'Find a common denominator first: 1/3 = 2/6, then add: 2/6 + 1/6 = 3/6 = 1/2.'
+        },
+        {
+          id: 'fraction-subtraction',
+          title: 'Subtracting Fractions',
+          type: 'calculation',
+          problem: '3/4 - 1/4 = ?',
+          answer: '1/2',
+          tutorial: 'Subtract the numerators and keep the denominator, then simplify if possible.'
+        },
+        {
+          id: 'fraction-multiplication',
+          title: 'Multiplying Fractions',
+          type: 'calculation',
+          problem: '2/3 × 1/4 = ?',
+          answer: '2/12',
+          tutorial: 'Multiply numerators together and denominators together: (2×1)/(3×4) = 2/12 = 1/6.'
+        },
+        {
+          id: 'decimal-conversion-1',
           title: 'Fraction to Decimal',
           type: 'conversion',
           problem: 'Convert 3/4 to decimal',
           answer: '0.75',
           tutorial: 'To convert a fraction to decimal, divide the numerator by the denominator.'
+        },
+        {
+          id: 'decimal-conversion-2',
+          title: 'Decimal to Fraction',
+          type: 'conversion',
+          problem: 'Convert 0.6 to fraction',
+          answer: '3/5',
+          tutorial: '0.6 = 6/10 = 3/5 when simplified by dividing both parts by 2.'
+        },
+        {
+          id: 'comparing-fractions',
+          title: 'Comparing Fractions',
+          type: 'comparison',
+          problem: 'Which is larger: 2/3 or 3/5?',
+          answer: '2/3',
+          tutorial: 'Convert to common denominators: 2/3 = 10/15 and 3/5 = 9/15. Since 10 > 9, 2/3 is larger.'
+        },
+        {
+          id: 'mixed-numbers',
+          title: 'Mixed Numbers',
+          type: 'calculation',
+          problem: 'Convert 7/3 to a mixed number',
+          answer: '2 1/3',
+          tutorial: 'Divide: 7 ÷ 3 = 2 remainder 1, so 7/3 = 2 1/3.'
         }
       ]
     },
@@ -99,7 +219,7 @@ export default function LearningModules() {
       level: 'Intermediate',
       exercises: [
         {
-          id: 'shape-recognition',
+          id: 'shape-recognition-1',
           title: 'Identify Shapes',
           type: 'visual',
           problem: 'How many sides does a hexagon have?',
@@ -107,20 +227,76 @@ export default function LearningModules() {
           tutorial: 'A hexagon is a polygon with 6 sides and 6 angles.'
         },
         {
-          id: 'area-calculation',
-          title: 'Calculate Area',
+          id: 'shape-recognition-2',
+          title: 'Triangle Types',
+          type: 'visual',
+          problem: 'What type of triangle has all equal sides?',
+          answer: 'equilateral',
+          tutorial: 'An equilateral triangle has all three sides equal and all angles are 60 degrees.'
+        },
+        {
+          id: 'area-rectangle',
+          title: 'Rectangle Area',
           type: 'calculation',
           problem: 'What is the area of a rectangle with length 8 and width 5?',
           answer: '40',
           tutorial: 'Area of a rectangle = length × width'
         },
         {
-          id: 'perimeter-calculation',
-          title: 'Calculate Perimeter',
+          id: 'area-triangle',
+          title: 'Triangle Area',
+          type: 'calculation',
+          problem: 'What is the area of a triangle with base 6 and height 4?',
+          answer: '12',
+          tutorial: 'Area of a triangle = (base × height) ÷ 2'
+        },
+        {
+          id: 'perimeter-square',
+          title: 'Square Perimeter',
           type: 'calculation',
           problem: 'What is the perimeter of a square with side length 6?',
           answer: '24',
           tutorial: 'Perimeter of a square = 4 × side length'
+        },
+        {
+          id: 'perimeter-rectangle',
+          title: 'Rectangle Perimeter',
+          type: 'calculation',
+          problem: 'What is the perimeter of a rectangle with length 7 and width 3?',
+          answer: '20',
+          tutorial: 'Perimeter of a rectangle = 2 × (length + width)'
+        },
+        {
+          id: 'circle-basics',
+          title: 'Circle Properties',
+          type: 'calculation',
+          problem: 'What is the diameter of a circle with radius 5?',
+          answer: '10',
+          tutorial: 'Diameter = 2 × radius. The diameter passes through the center.'
+        },
+        {
+          id: 'angles-1',
+          title: 'Angle Types',
+          type: 'visual',
+          problem: 'What type of angle is exactly 90 degrees?',
+          answer: 'right',
+          tutorial: 'A right angle is exactly 90 degrees, like the corner of a square.'
+        },
+        {
+          id: 'angles-2',
+          title: 'Angle Measurement',
+          type: 'calculation',
+          problem: 'If two angles in a triangle are 60° and 70°, what is the third angle?',
+          answer: '50',
+          tutorial: 'Angles in a triangle always add up to 180°. So: 180° - 60° - 70° = 50°.'
+        },
+        {
+          id: 'volume-cube',
+          title: 'Cube Volume',
+          type: 'calculation',
+          problem: 'What is the volume of a cube with side length 4?',
+          answer: '64',
+          tutorial: 'Volume of a cube = side × side × side (or side³)'
         }
       ]
     },
@@ -133,28 +309,84 @@ export default function LearningModules() {
       level: 'Advanced',
       exercises: [
         {
-          id: 'solve-for-x',
-          title: 'Solve for X',
+          id: 'solve-for-x-1',
+          title: 'Basic Equation',
           type: 'equation',
           problem: 'Solve: x + 5 = 12',
           answer: '7',
           tutorial: 'To solve for x, subtract 5 from both sides: x = 12 - 5 = 7'
         },
         {
-          id: 'simplify-expression',
-          title: 'Simplify Expression',
+          id: 'solve-for-x-2',
+          title: 'Subtraction Equation',
+          type: 'equation',
+          problem: 'Solve: x - 8 = 15',
+          answer: '23',
+          tutorial: 'Add 8 to both sides: x = 15 + 8 = 23'
+        },
+        {
+          id: 'solve-for-x-3',
+          title: 'Multiplication Equation',
+          type: 'equation',
+          problem: 'Solve: 3x = 21',
+          answer: '7',
+          tutorial: 'Divide both sides by 3: x = 21 ÷ 3 = 7'
+        },
+        {
+          id: 'solve-for-x-4',
+          title: 'Division Equation',
+          type: 'equation',
+          problem: 'Solve: x/4 = 9',
+          answer: '36',
+          tutorial: 'Multiply both sides by 4: x = 9 × 4 = 36'
+        },
+        {
+          id: 'simplify-expression-1',
+          title: 'Combining Like Terms',
           type: 'calculation',
           problem: 'Simplify: 3x + 2x',
           answer: '5x',
           tutorial: 'Combine like terms by adding the coefficients: 3x + 2x = (3 + 2)x = 5x'
         },
         {
-          id: 'word-problem',
-          title: 'Word Problem',
+          id: 'simplify-expression-2',
+          title: 'Complex Expression',
+          type: 'calculation',
+          problem: 'Simplify: 4x + 7 - 2x + 3',
+          answer: '2x + 10',
+          tutorial: 'Group like terms: (4x - 2x) + (7 + 3) = 2x + 10'
+        },
+        {
+          id: 'two-step-equation',
+          title: 'Two-Step Equation',
+          type: 'equation',
+          problem: 'Solve: 2x + 3 = 11',
+          answer: '4',
+          tutorial: 'First subtract 3: 2x = 8, then divide by 2: x = 4'
+        },
+        {
+          id: 'distributive-property',
+          title: 'Distributive Property',
+          type: 'calculation',
+          problem: 'Expand: 3(x + 4)',
+          answer: '3x + 12',
+          tutorial: 'Multiply 3 by each term inside: 3(x) + 3(4) = 3x + 12'
+        },
+        {
+          id: 'word-problem-1',
+          title: 'Number Problem',
           type: 'problem',
           problem: 'Sarah has 3 more apples than Tom. If Tom has x apples, how many does Sarah have?',
           answer: 'x + 3',
           tutorial: 'Translate words to math: "3 more than Tom" means Tom\'s amount + 3'
+        },
+        {
+          id: 'substitution',
+          title: 'Substitution',
+          type: 'calculation',
+          problem: 'If x = 5, what is 2x + 7?',
+          answer: '17',
+          tutorial: 'Replace x with 5: 2(5) + 7 = 10 + 7 = 17'
         }
       ]
     },
@@ -167,32 +399,89 @@ export default function LearningModules() {
       level: 'All Levels',
       exercises: [
         {
-          id: 'money-problem',
-          title: 'Money Math',
+          id: 'money-problem-1',
+          title: 'Shopping Math',
           type: 'problem',
           problem: 'If you buy 3 books for $8 each, how much do you spend in total?',
           answer: '24',
           tutorial: 'Total cost = number of items × price per item = 3 × $8 = $24'
         },
         {
-          id: 'time-problem',
-          title: 'Time Calculation',
+          id: 'money-problem-2',
+          title: 'Change Calculation',
+          type: 'problem',
+          problem: 'You buy items costing $7.50 and pay with a $10 bill. How much change do you receive?',
+          answer: '2.50',
+          tutorial: 'Change = amount paid - cost = $10.00 - $7.50 = $2.50'
+        },
+        {
+          id: 'time-problem-1',
+          title: 'Time Duration',
           type: 'problem',
           problem: 'A movie starts at 2:30 PM and lasts 2 hours 15 minutes. What time does it end?',
           answer: '4:45 PM',
           tutorial: 'Add the duration to start time: 2:30 PM + 2:15 = 4:45 PM'
         },
         {
-          id: 'measurement-problem',
-          title: 'Measurement',
+          id: 'time-problem-2',
+          title: 'Travel Time',
+          type: 'problem',
+          problem: 'If you leave home at 9:15 AM and arrive at school at 9:40 AM, how long did the trip take?',
+          answer: '25 minutes',
+          tutorial: 'Subtract start time from end time: 9:40 - 9:15 = 25 minutes'
+        },
+        {
+          id: 'measurement-problem-1',
+          title: 'Recipe Math',
           type: 'problem',
           problem: 'A recipe calls for 2.5 cups of flour. If you double the recipe, how much flour do you need?',
           answer: '5 cups',
           tutorial: 'Double means multiply by 2: 2.5 × 2 = 5 cups'
+        },
+        {
+          id: 'measurement-problem-2',
+          title: 'Distance Problem',
+          type: 'problem',
+          problem: 'If you walk 0.8 miles to the store and the same distance back, how far did you walk in total?',
+          answer: '1.6 miles',
+          tutorial: 'Total distance = distance there + distance back = 0.8 + 0.8 = 1.6 miles'
+        },
+        {
+          id: 'age-problem',
+          title: 'Age Calculation',
+          type: 'problem',
+          problem: 'Maria is 12 years old. Her brother is 3 years younger. How old is her brother?',
+          answer: '9',
+          tutorial: 'Subtract the age difference: 12 - 3 = 9 years old'
+        },
+        {
+          id: 'sharing-problem',
+          title: 'Equal Sharing',
+          type: 'problem',
+          problem: 'If 20 cookies are shared equally among 4 children, how many cookies does each child get?',
+          answer: '5',
+          tutorial: 'Divide the total by the number of people: 20 ÷ 4 = 5 cookies each'
+        },
+        {
+          id: 'multi-step-problem',
+          title: 'Multi-Step Problem',
+          type: 'problem',
+          problem: 'You have $15. You buy a toy for $6 and a book for $4. How much money do you have left?',
+          answer: '5',
+          tutorial: 'Calculate total spent: $6 + $4 = $10. Then subtract from original: $15 - $10 = $5'
+        },
+        {
+          id: 'comparison-problem',
+          title: 'Comparison Problem',
+          type: 'problem',
+          problem: 'Tom has 18 stickers and Sam has 12 stickers. How many more stickers does Tom have?',
+          answer: '6',
+          tutorial: 'Find the difference by subtracting: 18 - 12 = 6 more stickers'
         }
       ]
     }
   ]
+
 
   useEffect(() => {
     // Initialize progress for all modules
