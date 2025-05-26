@@ -389,11 +389,10 @@ export default function LearningMap() {
             
             return (
               <div
-                key={world.id}
-                className={`p-4 sm:p-6 rounded-2xl border transition-all duration-300 ${
+                className={`p-4 sm:p-6 rounded-2xl border transition-all duration-300 cursor-pointer hover:shadow-card ${
                   isUnlocked
-                    ? 'bg-white/70 dark:bg-surface-800/70 border-white/20 dark:border-surface-700/50 shadow-soft hover:shadow-card cursor-pointer'
-                    : 'bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 opacity-60'
+                    ? 'bg-white/70 dark:bg-surface-800/70 border-white/20 dark:border-surface-700/50 shadow-soft'
+                    : 'bg-white/50 dark:bg-surface-800/50 border-gray-200/60 dark:border-gray-700/60 shadow-soft hover:bg-white/60 dark:hover:bg-surface-800/60'
                 }`}
                 onClick={() => isUnlocked && handleWorldClick(world)}
               >
