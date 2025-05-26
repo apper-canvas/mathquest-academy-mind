@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+
 import { toast } from 'react-toastify'
 import ApperIcon from './ApperIcon'
 
@@ -172,6 +174,8 @@ const MINI_GAMES_DATA = {
 
 export default function MiniGameLauncher() {
   const [selectedCategory, setSelectedCategory] = useState('math')
+  const navigate = useNavigate()
+
   const [selectedGame, setSelectedGame] = useState(null)
   const [showGamePreview, setShowGamePreview] = useState(false)
 
@@ -191,10 +195,12 @@ export default function MiniGameLauncher() {
 
   const handlePlayGame = (gameId) => {
     toast.success(`Launching ${selectedGame.name}! Get ready to learn!`)
-    // Here would be the actual game launch logic
+    // Navigate to the specific game
+    navigate(`/mini-games/${gameId}`)
     setShowGamePreview(false)
     setSelectedGame(null)
   }
+
 
   const closeGamePreview = () => {
     setSelectedGame(null)
