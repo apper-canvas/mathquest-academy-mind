@@ -1748,319 +1748,49 @@ export default function ReadingModules() {
           </div>
         )
 
-  if (selectedModule && selectedLevel !== null) {
+    }
+  }
+
+  if (exerciseComplete) {
     const module = READING_MODULES[selectedModule]
     const level = module.levels[selectedLevel]
+    const percentage = Math.round((correctAnswers / level.exercises.length) * 100)
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900">
-        {/* Header */}
-        <header className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10"></div>
-          <nav className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 bg-gradient-to-br ${module.color} rounded-xl flex items-center justify-center shadow-game`}>
-                  <ApperIcon name={module.icon} className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-surface-800 dark:text-white">
-                    {module.name}
-                  </h1>
-                  <p className="text-sm text-surface-600 dark:text-surface-300">
-                    {level.name}
-                  </p>
-                </div>
-              </div>
-              
-              <button
-                onClick={() => setSelectedLevel(null)}
-                className="flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-surface-800/80 backdrop-blur-sm rounded-xl font-medium shadow-soft hover:shadow-card transition-all duration-300 text-surface-700 dark:text-surface-300"
-              >
-                <ApperIcon name="ArrowLeft" className="w-5 h-5" />
-                <span>Back to Levels</span>
-              </button>
-            </div>
-          </nav>
-        </header>
-
-        {/* Main Content */}
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="max-w-4xl mx-auto">
-            {/* Progress Bar */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-surface-600 dark:text-surface-300">
-                  Exercise {currentExercise + 1} of {level.exercises.length}
-                </span>
-                <span className="text-sm font-medium text-surface-600 dark:text-surface-300">
-                  Score: {score}
-                </span>
-              </div>
-              <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-2">
-                <div 
-                  className={`bg-gradient-to-r ${module.color} h-2 rounded-full transition-all duration-500`}
-                  style={{ width: `${((currentExercise + 1) / level.exercises.length) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-
-            {/* Exercise Card */}
-            <motion.div
-              key={currentExercise}
-              className="bg-white/70 dark:bg-surface-800/70 backdrop-blur-sm rounded-3xl p-8 shadow-floating border border-white/20 dark:border-surface-700/50"
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              {renderExercise()}
-
-              {!showResult && (
-                <div className="mt-8 text-center">
-                  <motion.button
-                    onClick={() => {
-                      const exercise = READING_MODULES[selectedModule].levels[selectedLevel].exercises[currentExercise]
-                      if (exercise.type === 'story-starter') {
-                        setUserAnswer(storyText)
-                      }
-                      handleAnswerSubmit()
-                    }}
-                    className={`px-8 py-4 bg-gradient-to-r ${module.color} text-white rounded-2xl font-semibold text-lg shadow-game hover:shadow-floating transition-all duration-300 flex items-center justify-center space-x-3 mx-auto`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <ApperIcon name="Send" className="w-5 h-5" />
-                    <span>Submit Answer</span>
-                  </motion.button>
-                </div>
-              )}
-            </motion.div>
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900 flex items-center justify-center">
+        <motion.div
+          className="bg-white/70 dark:bg-surface-800/70 backdrop-blur-sm rounded-3xl p-8 shadow-floating border border-white/20 dark:border-surface-700/50 text-center max-w-md mx-auto"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className={`w-20 h-20 bg-gradient-to-br ${module.color} rounded-full flex items-center justify-center mx-auto mb-6`}>
+            <ApperIcon name="CheckCircle" className="w-10 h-10 text-white" />
           </div>
-        </main>
+          <h2 className="text-2xl font-bold text-surface-800 dark:text-white mb-4">
+            Level Complete!
+          </h2>
+          <p className="text-lg text-surface-600 dark:text-surface-300 mb-6">
+            You scored {percentage}% on {level.name}
+          </p>
+          <div className="flex space-x-4">
+            <button
+              onClick={resetLevel}
+              className="px-6 py-3 bg-gradient-to-r from-secondary to-accent text-white rounded-xl font-semibold shadow-game hover:shadow-floating transition-all duration-300"
+            >
+              Try Again
+            </button>
+            <button
+              onClick={() => setSelectedLevel(null)}
+              className="px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-semibold shadow-game hover:shadow-floating transition-all duration-300"
+            >
+              Back to Levels
+            </button>
+          </div>
+        </motion.div>
       </div>
     )
   }
 
-  if (selectedModule) {
-    const module = READING_MODULES[selectedModule]
 
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900">
-        {/* Header */}
-        <header className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10"></div>
-          <nav className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 bg-gradient-to-br ${module.color} rounded-xl flex items-center justify-center shadow-game`}>
-                  <ApperIcon name={module.icon} className="w-5 h-5 text-white" />
-                </div>
-                <h1 className="text-2xl font-bold text-surface-800 dark:text-white">
-                  {module.name}
-                </h1>
-              </div>
-              
-              <button
-                onClick={() => setSelectedModule(null)}
-                className="flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-surface-800/80 backdrop-blur-sm rounded-xl font-medium shadow-soft hover:shadow-card transition-all duration-300 text-surface-700 dark:text-surface-300"
-              >
-                <ApperIcon name="ArrowLeft" className="w-5 h-5" />
-                <span>Back to Modules</span>
-              </button>
-            </div>
-          </nav>
-        </header>
-
-        {/* Levels Grid */}
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-surface-800 dark:text-white mb-4">
-                Choose Your Level
-              </h2>
-              <p className="text-lg text-surface-600 dark:text-surface-300">
-                {module.description}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {module.levels.map((level, index) => {
-                const levelProgress = progress[selectedModule]?.[index]
-                const completedExercises = levelProgress?.completed?.length || 0
-                const totalExercises = level.exercises.length
-                const completionPercentage = Math.round((completedExercises / totalExercises) * 100)
-
-                return (
-                  <motion.div
-                    key={index}
-                    className="group relative cursor-pointer"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    onClick={() => handleLevelSelect(index)}
-                  >
-                    <div className="bg-white/70 dark:bg-surface-800/70 backdrop-blur-sm rounded-2xl p-6 shadow-soft hover:shadow-floating transition-all duration-300 border border-white/20 dark:border-surface-700/50 game-card-hover">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-bold text-surface-800 dark:text-white">
-                          {level.name}
-                        </h3>
-                        <div className={`w-8 h-8 bg-gradient-to-br ${module.color} rounded-lg flex items-center justify-center`}>
-                          <span className="text-white font-bold text-sm">{index + 1}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="mb-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-surface-600 dark:text-surface-400">
-                            Progress: {completedExercises}/{totalExercises}
-                          </span>
-                          <span className="text-sm font-medium text-surface-700 dark:text-surface-300">
-                            {completionPercentage}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-2">
-                          <div 
-                            className={`bg-gradient-to-r ${module.color} h-2 rounded-full transition-all duration-500`}
-                            style={{ width: `${completionPercentage}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                      
-                      <p className="text-sm text-surface-600 dark:text-surface-400 mb-4">
-                        {totalExercises} exercises
-                      </p>
-                      
-                      {levelProgress?.score && (
-                        <div className="flex items-center space-x-2">
-                          <ApperIcon name="Star" className="w-4 h-4 text-yellow-500" />
-                          <span className="text-sm font-medium text-surface-700 dark:text-surface-300">
-                            {levelProgress.score} points earned
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </div>
-          </div>
-        </main>
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900">
-      {/* Header */}
-      <header className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10"></div>
-        <nav className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-game">
-                <ApperIcon name="BookOpen" className="w-5 h-5 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-gradient">
-                Interactive Reading Modules
-              </h1>
-            </div>
-            
-            <Link
-              to="/"
-              className="flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-surface-800/80 backdrop-blur-sm rounded-xl font-medium shadow-soft hover:shadow-card transition-all duration-300 text-surface-700 dark:text-surface-300"
-            >
-              <ApperIcon name="Home" className="w-5 h-5" />
-              <span>Home</span>
-            </Link>
-          </div>
-        </nav>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-6xl mx-auto">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <motion.h2 
-              className="text-4xl font-bold text-surface-800 dark:text-white mb-4"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              Master Reading Through
-              <span className="text-gradient block sm:inline sm:ml-3">
-                Interactive Learning
-              </span>
-            </motion.h2>
-            <motion.p 
-              className="text-xl text-surface-600 dark:text-surface-300 mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Explore comprehensive reading modules with phonics, vocabulary, comprehension, and creative writing
-            </motion.p>
-          </div>
-
-          {/* Modules Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Object.entries(READING_MODULES).map(([moduleId, module], index) => {
-              const moduleProgress = progress[moduleId]
-              const totalLevels = module.levels.length
-              const completedLevels = moduleProgress ? Object.keys(moduleProgress).length : 0
-              const completionPercentage = Math.round((completedLevels / totalLevels) * 100)
-
-              return (
-                <motion.div
-                  key={moduleId}
-                  className="group relative cursor-pointer"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  onClick={() => handleModuleSelect(moduleId)}
-                >
-                  <div className="bg-white/70 dark:bg-surface-800/70 backdrop-blur-sm rounded-3xl p-6 shadow-soft hover:shadow-floating transition-all duration-300 border border-white/20 dark:border-surface-700/50 game-card-hover">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${module.color} rounded-2xl flex items-center justify-center mb-4 mx-auto shadow-game group-hover:animate-bounce-slow`}>
-                      <ApperIcon name={module.icon} className="w-8 h-8 text-white" />
-                    </div>
-                    
-                    <h3 className="text-xl font-bold text-surface-800 dark:text-white mb-2 text-center">
-                      {module.name}
-                    </h3>
-                    
-                    <p className="text-surface-600 dark:text-surface-300 text-center mb-4 leading-relaxed">
-                      {module.description}
-                    </p>
-                    
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-surface-600 dark:text-surface-400">
-                          Progress: {completedLevels}/{totalLevels} levels
-                        </span>
-                        <span className="text-sm font-medium text-surface-700 dark:text-surface-300">
-                          {completionPercentage}%
-                        </span>
-                      </div>
-                      <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-2">
-                        <div 
-                          className={`bg-gradient-to-r ${module.color} h-2 rounded-full transition-all duration-500`}
-                          style={{ width: `${completionPercentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    
-                    <div className="text-center">
-                      <span className="text-sm text-surface-600 dark:text-surface-400">
-                        {totalLevels} levels • Interactive exercises
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </div>
-        </div>
-      </main>
-    </div>
-  )
 }
