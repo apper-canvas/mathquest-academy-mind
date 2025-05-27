@@ -444,6 +444,7 @@ export default function ReadingModules() {
     let isCorrect = false
     
     // Check answer based on exercise type
+    // Check answer based on exercise type
     switch (exercise.type) {
       case 'phonics-match':
       case 'word-picture':
@@ -455,7 +456,21 @@ export default function ReadingModules() {
       case 'detail-question':
       case 'sight-word-flash':
       case 'part-of-speech':
-        const correctAnswer = exercise.answer || exercise.synonym || exercise.antonym || exercise.word || exercise.mainIdea || exercise.partOfSpeech || '';
+      case 'noun-category':
+      case 'verb-tense':
+      case 'adjective-sentence':
+      case 'adverb-sentence':
+      case 'pronoun-replace':
+      case 'possessive-pronoun':
+      case 'period-choice':
+      case 'question-choice':
+      case 'exclamation-choice':
+      case 'punctuation-mixed':
+      case 'contraction':
+      case 'possession':
+      case 'apostrophe-choice':
+      case 'expand-contraction':
+        const correctAnswer = exercise.answer || exercise.synonym || exercise.antonym || exercise.word || exercise.mainIdea || exercise.partOfSpeech || exercise.correct || exercise.category || exercise.tense || exercise.adjective || exercise.adverb || exercise.pronoun || exercise.verb || exercise.contraction || exercise.possessive || exercise.expanded || '';
         isCorrect = userAnswer && correctAnswer ? userAnswer.toLowerCase() === correctAnswer.toLowerCase() : false;
         break
       case 'blend-words':
@@ -471,6 +486,9 @@ export default function ReadingModules() {
         isCorrect = userAnswer.trim() === exercise.correct
         break
       case 'punctuation':
+      case 'comma-list':
+      case 'comma-address':
+      case 'comma-compound':
         isCorrect = userAnswer === exercise.correct
         break
       case 'story-starter':
@@ -485,9 +503,51 @@ export default function ReadingModules() {
       case 'fluency-read':
         isCorrect = selectedOptions.length === exercise.words.length
         break
+      case 'identify-all-parts':
+        isCorrect = selectedOptions.length >= exercise.words.length
+        break
+      case 'complete-sentence':
+        isCorrect = userAnswer.trim().length > 10
+        break
+      case 'sort-parts':
+        isCorrect = selectedOptions.length >= Object.values(exercise.categories).flat().length
+        break
+      case 'statement-identify':
+      case 'question-identify':
+      case 'exclamation-identify':
+        isCorrect = userAnswer === exercise.type || userAnswer === exercise.correct
+        break
+      case 'comma-placement':
+        isCorrect = userAnswer === exercise.correct
+        break
+      case 'comma-series':
+        isCorrect = userAnswer === exercise.correct
+        break
+      case 'multiple-punctuation':
+        isCorrect = userAnswer === exercise.correct
+        break
+      case 'comma-and-period':
+        isCorrect = userAnswer === exercise.correct
+        break
+      case 'dialogue-punctuation':
+        isCorrect = userAnswer === exercise.correct
+        break
+      case 'punctuation-paragraph':
+        isCorrect = userAnswer === exercise.correct
+        break
+      case 'compare-adjectives':
+        isCorrect = userAnswer === exercise.comparison
+        break
+      case 'adverb-question':
+        isCorrect = userAnswer === exercise.adverb
+        break
+      case 'action-verb':
+        isCorrect = userAnswer === exercise.verb
+        break
       default:
         isCorrect = false
     }
+
 
     setShowResult(true)
     
@@ -757,6 +817,928 @@ export default function ReadingModules() {
           </div>
         )
 
+      case 'synonym-match':
+      case 'antonym-match':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              {exercise.type === 'synonym-match' ? 'Find a word with similar meaning:' : 'Find a word with opposite meaning:'}
+            </h3>
+            <div className="w-32 h-32 bg-gradient-to-br from-primary to-accent rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-xl font-bold shadow-game">
+              {exercise.word}
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'context-clue':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Fill in the blank using context clues:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'sight-word-flash':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Which sight word is this?
+            </h3>
+            <div className="w-40 h-24 bg-gradient-to-br from-red-400 to-red-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold shadow-game animate-pulse-slow">
+              {exercise.word}
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'word-family':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Which words belong to the "{exercise.family}" family?
+            </h3>
+            <div className="w-24 h-24 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
+              {exercise.family}
+            </div>
+            <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+              {[...exercise.words, exercise.nonFamily].sort().map((word) => (
+                <button
+                  key={word}
+                  onClick={() => handleOptionToggle(word)}
+                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
+                    selectedOptions.includes(word)
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {word}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'fluency-read':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Read the sentence and click each word in order:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-xl text-surface-800 dark:text-white font-medium">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {exercise.words.map((word, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleOptionToggle(word)}
+                  className={`px-4 py-2 rounded-xl font-semibold transition-all duration-300 ${
+                    selectedOptions.includes(word)
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {word}
+                </button>
+              ))}
+            </div>
+            <p className="text-sm text-surface-600 dark:text-surface-400 mt-4">
+              Selected: {selectedOptions.length}/{exercise.words.length} words
+            </p>
+          </div>
+        )
+
+      case 'noun-category':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              What type of noun is "{exercise.word}"?
+            </h3>
+            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
+              {exercise.word}
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'verb-tense':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              What tense is "{exercise.word}"?
+            </h3>
+            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
+              {exercise.word}
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'action-verb':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Complete the sentence with the correct action verb:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'adjective-sentence':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Complete the sentence with the correct adjective:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'compare-adjectives':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              What type of comparison is "{exercise.word}"?
+            </h3>
+            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
+              {exercise.word}
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'pronoun-replace':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Replace the noun with the correct pronoun:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'possessive-pronoun':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Complete with the correct possessive pronoun:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'adverb-sentence':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Complete the sentence with the correct adverb:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'adverb-question':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Answer the question with an adverb:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.question}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'identify-all-parts':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Identify the parts of speech in this sentence:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {exercise.words.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleOptionToggle(`${item.word}-${item.part}`)}
+                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
+                    selectedOptions.includes(`${item.word}-${item.part}`)
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  <span className="font-bold">{item.word}</span> - {item.part}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'complete-sentence':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Complete the sentence:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <textarea
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Complete the sentence..."
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
+              disabled={showResult}
+            />
+          </div>
+        )
+
+      case 'sort-parts':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Sort these words by their parts of speech:
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+              {exercise.words.map((word, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleOptionToggle(word)}
+                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
+                    selectedOptions.includes(word)
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {word}
+                </button>
+              ))}
+            </div>
+            <p className="text-sm text-surface-600 dark:text-surface-400">
+              Click words to select them. Selected: {selectedOptions.length}/{exercise.words.length}
+            </p>
+          </div>
+        )
+
+      case 'period-choice':
+      case 'question-choice':
+      case 'exclamation-choice':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              What punctuation mark should end this sentence?
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`w-16 h-16 rounded-xl font-bold text-2xl transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'statement-identify':
+      case 'question-identify':
+      case 'exclamation-identify':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              What type of sentence is this?
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'comma-list':
+      case 'comma-address':
+      case 'comma-compound':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Add commas to this sentence:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <input
+              type="text"
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Type the corrected sentence..."
+              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
+              disabled={showResult}
+            />
+          </div>
+        )
+
+      case 'comma-placement':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Where should the commas go?
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <input
+              type="text"
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Type the corrected sentence..."
+              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
+              disabled={showResult}
+            />
+          </div>
+        )
+
+      case 'comma-series':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Complete the sentence with commas in the series:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                Items: {exercise.items.join(', ')}
+              </p>
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed mt-2">
+                {exercise.sentence}
+              </p>
+            </div>
+            <input
+              type="text"
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Complete the sentence..."
+              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
+              disabled={showResult}
+            />
+          </div>
+        )
+
+      case 'contraction':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              What is the contraction for "{exercise.words}"?
+            </h3>
+            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-sm font-bold shadow-game">
+              {exercise.words}
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'possession':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              How do you show possession for "{exercise.phrase}"?
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500 max-w-md mx-auto">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.phrase}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'apostrophe-choice':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Add the apostrophe to make this sentence correct:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'expand-contraction':
+        return (
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              What does "{exercise.contraction}" stand for?
+            </h3>
+            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
+              {exercise.contraction}
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'punctuation-mixed':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              What punctuation mark should end this sentence?
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence}
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              {exercise.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setUserAnswer(option)}
+                  className={`w-16 h-16 rounded-xl font-bold text-2xl transition-all duration-300 ${
+                    userAnswer === option
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 'multiple-punctuation':
+      case 'comma-and-period':
+      case 'dialogue-punctuation':
+      case 'punctuation-paragraph':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Add the correct punctuation:
+            </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
+                {exercise.sentence || exercise.text}
+              </p>
+            </div>
+            <input
+              type="text"
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Type the corrected sentence..."
+              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
+              disabled={showResult}
+            />
+          </div>
+        )
+
+      case 'story-element':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              Story Element: {exercise.element}
+            </h3>
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
+              <p className="text-lg text-surface-800 dark:text-white font-medium mb-4">
+                {exercise.question}
+              </p>
+              <p className="text-sm text-surface-600 dark:text-surface-400">
+                Example: {exercise.example}
+              </p>
+            </div>
+            <textarea
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Describe your story element..."
+              rows={4}
+              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
+              disabled={showResult}
+            />
+          </div>
+        )
+
+      case 'character-trait':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              {exercise.question}
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+              {exercise.traits.map((trait) => (
+                <button
+                  key={trait}
+                  onClick={() => handleOptionToggle(trait)}
+                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
+                    selectedOptions.includes(trait)
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {trait}
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Describe your character's personality..."
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
+              disabled={showResult}
+            />
+          </div>
+        )
+
+      case 'character-appearance':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              {exercise.question}
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+              {exercise.features.map((feature) => (
+                <button
+                  key={feature}
+                  onClick={() => handleOptionToggle(feature)}
+                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
+                    selectedOptions.includes(feature)
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {feature}
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Describe what your character looks like..."
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
+              disabled={showResult}
+            />
+          </div>
+        )
+
+      case 'character-goal':
+        return (
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
+              {exercise.question}
+            </h3>
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              {exercise.goals.map((goal) => (
+                <button
+                  key={goal}
+                  onClick={() => handleOptionToggle(goal)}
+                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
+                    selectedOptions.includes(goal)
+                      ? 'bg-primary text-white shadow-game'
+                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
+                  }`}
+                  disabled={showResult}
+                >
+                  {goal}
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Describe what your character wants to achieve..."
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
+              disabled={showResult}
+            />
+          </div>
+        )
+
       default:
         return (
           <div className="text-center">
@@ -765,7 +1747,7 @@ export default function ReadingModules() {
             </h3>
           </div>
         )
-    }
+
   }
 
   if (exerciseComplete) {
