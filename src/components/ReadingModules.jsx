@@ -171,30 +171,169 @@ const READING_MODULES = {
     description: 'Learn proper grammar and sentence structure',
     levels: [
       {
-        name: 'Parts of Speech',
+        name: 'Nouns - People, Places, Things',
+        exercises: [
+          { type: 'part-of-speech', word: 'teacher', partOfSpeech: 'noun', category: 'person', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'school', partOfSpeech: 'noun', category: 'place', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'book', partOfSpeech: 'noun', category: 'thing', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'doctor', partOfSpeech: 'noun', category: 'person', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'park', partOfSpeech: 'noun', category: 'place', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'car', partOfSpeech: 'noun', category: 'thing', options: ['noun', 'verb', 'adjective'] },
+          { type: 'noun-category', word: 'firefighter', category: 'person', options: ['person', 'place', 'thing'] },
+          { type: 'noun-category', word: 'library', category: 'place', options: ['person', 'place', 'thing'] },
+          { type: 'noun-category', word: 'bicycle', category: 'thing', options: ['person', 'place', 'thing'] }
+        ]
+      },
+      {
+        name: 'Verbs - Action Words',
         exercises: [
           { type: 'part-of-speech', word: 'run', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'happy', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'dog', partOfSpeech: 'noun', options: ['noun', 'verb', 'adjective'] }
+          { type: 'part-of-speech', word: 'jump', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'sing', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'write', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'dance', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
+          { type: 'verb-tense', word: 'walked', tense: 'past', options: ['present', 'past', 'future'] },
+          { type: 'verb-tense', word: 'running', tense: 'present', options: ['present', 'past', 'future'] },
+          { type: 'verb-tense', word: 'will play', tense: 'future', options: ['present', 'past', 'future'] },
+          { type: 'action-verb', sentence: 'The cat _____ on the mat.', verb: 'sits', options: ['sits', 'happy', 'big'] }
         ]
       },
       {
-        name: 'Sentence Structure',
+        name: 'Adjectives - Describing Words',
         exercises: [
-          { type: 'sentence-order', words: ['The', 'dog', 'runs', 'fast'], correct: 'The dog runs fast.' },
-          { type: 'sentence-order', words: ['I', 'like', 'to', 'read'], correct: 'I like to read.' },
-          { type: 'sentence-order', words: ['She', 'has', 'a', 'cat'], correct: 'She has a cat.' }
+          { type: 'part-of-speech', word: 'big', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'happy', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'red', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'fast', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
+          { type: 'part-of-speech', word: 'small', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
+          { type: 'adjective-sentence', sentence: 'The _____ dog barked loudly.', adjective: 'loud', options: ['loud', 'run', 'quickly'] },
+          { type: 'adjective-sentence', sentence: 'She wore a _____ dress.', adjective: 'beautiful', options: ['beautiful', 'dance', 'tomorrow'] },
+          { type: 'adjective-sentence', sentence: 'The _____ ice cream melted.', adjective: 'cold', options: ['cold', 'melt', 'spoon'] },
+          { type: 'compare-adjectives', word: 'bigger', comparison: 'comparative', options: ['positive', 'comparative', 'superlative'] }
         ]
       },
       {
-        name: 'Punctuation',
+        name: 'Pronouns - Replacing Nouns',
+        exercises: [
+          { type: 'part-of-speech', word: 'he', partOfSpeech: 'pronoun', options: ['noun', 'verb', 'pronoun'] },
+          { type: 'part-of-speech', word: 'she', partOfSpeech: 'pronoun', options: ['noun', 'verb', 'pronoun'] },
+          { type: 'part-of-speech', word: 'it', partOfSpeech: 'pronoun', options: ['noun', 'verb', 'pronoun'] },
+          { type: 'part-of-speech', word: 'they', partOfSpeech: 'pronoun', options: ['noun', 'verb', 'pronoun'] },
+          { type: 'pronoun-replace', sentence: 'Tom likes pizza. _____ eats it every day.', pronoun: 'He', options: ['He', 'She', 'It'] },
+          { type: 'pronoun-replace', sentence: 'The cat is sleeping. _____ looks peaceful.', pronoun: 'It', options: ['He', 'She', 'It'] },
+          { type: 'pronoun-replace', sentence: 'My friends are coming. _____ will be here soon.', pronoun: 'They', options: ['He', 'She', 'They'] },
+          { type: 'possessive-pronoun', sentence: 'This is _____ book.', pronoun: 'my', options: ['my', 'me', 'I'] },
+          { type: 'possessive-pronoun', sentence: 'The dog wagged _____ tail.', pronoun: 'its', options: ['its', 'it', 'his'] }
+        ]
+      },
+      {
+        name: 'Adverbs - Describing Actions',
+        exercises: [
+          { type: 'part-of-speech', word: 'quickly', partOfSpeech: 'adverb', options: ['adjective', 'verb', 'adverb'] },
+          { type: 'part-of-speech', word: 'slowly', partOfSpeech: 'adverb', options: ['adjective', 'verb', 'adverb'] },
+          { type: 'part-of-speech', word: 'carefully', partOfSpeech: 'adverb', options: ['adjective', 'verb', 'adverb'] },
+          { type: 'part-of-speech', word: 'loudly', partOfSpeech: 'adverb', options: ['adjective', 'verb', 'adverb'] },
+          { type: 'adverb-sentence', sentence: 'She ran _____ to catch the bus.', adverb: 'quickly', options: ['quickly', 'quick', 'fast'] },
+          { type: 'adverb-sentence', sentence: 'He spoke _____ to the baby.', adverb: 'softly', options: ['softly', 'soft', 'quiet'] },
+          { type: 'adverb-sentence', sentence: 'They worked _____ on the project.', adverb: 'carefully', options: ['carefully', 'careful', 'care'] },
+          { type: 'adverb-question', question: 'How did she sing?', adverb: 'beautifully', options: ['beautiful', 'beautifully', 'beauty'] },
+          { type: 'adverb-question', question: 'When will we leave?', adverb: 'tomorrow', options: ['tomorrow', 'today', 'yesterday'] }
+        ]
+      },
+      {
+        name: 'Mixed Parts of Speech',
+        exercises: [
+          { type: 'identify-all-parts', sentence: 'The happy dog runs quickly.', words: [{ word: 'dog', part: 'noun' }, { word: 'happy', part: 'adjective' }, { word: 'runs', part: 'verb' }, { word: 'quickly', part: 'adverb' }] },
+          { type: 'identify-all-parts', sentence: 'She carefully picked the red flowers.', words: [{ word: 'She', part: 'pronoun' }, { word: 'carefully', part: 'adverb' }, { word: 'picked', part: 'verb' }, { word: 'flowers', part: 'noun' }] },
+          { type: 'part-of-speech', word: 'beautiful', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective', 'adverb'] },
+          { type: 'part-of-speech', word: 'teacher', partOfSpeech: 'noun', options: ['noun', 'verb', 'adjective', 'pronoun'] },
+          { type: 'part-of-speech', word: 'whispered', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective', 'adverb'] },
+          { type: 'complete-sentence', sentence: 'The _____ (adjective) cat _____ (verb) _____ (adverb).', words: { adjective: 'fluffy', verb: 'sleeps', adverb: 'peacefully' } },
+          { type: 'sort-parts', words: ['run', 'happy', 'quickly', 'dog', 'she', 'beautiful'], categories: { nouns: ['dog'], verbs: ['run'], adjectives: ['happy', 'beautiful'], adverbs: ['quickly'], pronouns: ['she'] } }
+        ]
+      },
+      {
+        name: 'Periods - Ending Statements',
+        exercises: [
+          { type: 'punctuation', sentence: 'I like to read books', correct: 'I like to read books.', punctuation: '.' },
+          { type: 'punctuation', sentence: 'The cat is sleeping', correct: 'The cat is sleeping.', punctuation: '.' },
+          { type: 'punctuation', sentence: 'We went to the park', correct: 'We went to the park.', punctuation: '.' },
+          { type: 'punctuation', sentence: 'My name is Sarah', correct: 'My name is Sarah.', punctuation: '.' },
+          { type: 'punctuation', sentence: 'The sun is bright today', correct: 'The sun is bright today.', punctuation: '.' },
+          { type: 'period-choice', sentence: 'Birds can fly', options: ['.', '?', '!'], correct: '.' },
+          { type: 'period-choice', sentence: 'I have a pet dog', options: ['.', '?', '!'], correct: '.' },
+          { type: 'period-choice', sentence: 'She likes ice cream', options: ['.', '?', '!'], correct: '.' },
+          { type: 'statement-identify', sentence: 'The flowers are beautiful', type: 'statement', options: ['statement', 'question', 'exclamation'] }
+        ]
+      },
+      {
+        name: 'Question Marks - Asking Questions',
         exercises: [
           { type: 'punctuation', sentence: 'What is your name', correct: 'What is your name?', punctuation: '?' },
-          { type: 'punctuation', sentence: 'I love pizza', correct: 'I love pizza.', punctuation: '.' },
-          { type: 'punctuation', sentence: 'Wow, that\'s amazing', correct: 'Wow, that\'s amazing!', punctuation: '!' }
+          { type: 'punctuation', sentence: 'How old are you', correct: 'How old are you?', punctuation: '?' },
+          { type: 'punctuation', sentence: 'Where do you live', correct: 'Where do you live?', punctuation: '?' },
+          { type: 'punctuation', sentence: 'Can you help me', correct: 'Can you help me?', punctuation: '?' },
+          { type: 'punctuation', sentence: 'Do you like pizza', correct: 'Do you like pizza?', punctuation: '?' },
+          { type: 'question-choice', sentence: 'Why is the sky blue', options: ['.', '?', '!'], correct: '?' },
+          { type: 'question-choice', sentence: 'When will we eat lunch', options: ['.', '?', '!'], correct: '?' },
+          { type: 'question-choice', sentence: 'Who is your teacher', options: ['.', '?', '!'], correct: '?' },
+          { type: 'question-identify', sentence: 'Are you coming to the party', type: 'question', options: ['statement', 'question', 'exclamation'] }
+        ]
+      },
+      {
+        name: 'Exclamation Points - Showing Excitement',
+        exercises: [
+          { type: 'punctuation', sentence: 'Wow, that\'s amazing', correct: 'Wow, that\'s amazing!', punctuation: '!' },
+          { type: 'punctuation', sentence: 'Help me', correct: 'Help me!', punctuation: '!' },
+          { type: 'punctuation', sentence: 'What a beautiful day', correct: 'What a beautiful day!', punctuation: '!' },
+          { type: 'punctuation', sentence: 'I won the game', correct: 'I won the game!', punctuation: '!' },
+          { type: 'punctuation', sentence: 'Look out', correct: 'Look out!', punctuation: '!' },
+          { type: 'exclamation-choice', sentence: 'That was incredible', options: ['.', '?', '!'], correct: '!' },
+          { type: 'exclamation-choice', sentence: 'Stop right there', options: ['.', '?', '!'], correct: '!' },
+          { type: 'exclamation-choice', sentence: 'Happy birthday', options: ['.', '?', '!'], correct: '!' },
+          { type: 'exclamation-identify', sentence: 'What a surprise', type: 'exclamation', options: ['statement', 'question', 'exclamation'] }
+        ]
+      },
+      {
+        name: 'Commas - Lists and Pauses',
+        exercises: [
+          { type: 'comma-list', sentence: 'I like apples oranges and bananas', correct: 'I like apples, oranges, and bananas.', punctuation: ',' },
+          { type: 'comma-list', sentence: 'We need pencils paper and erasers', correct: 'We need pencils, paper, and erasers.', punctuation: ',' },
+          { type: 'comma-list', sentence: 'The colors are red blue and green', correct: 'The colors are red, blue, and green.', punctuation: ',' },
+          { type: 'comma-address', sentence: 'Yes I will come to the party', correct: 'Yes, I will come to the party.', punctuation: ',' },
+          { type: 'comma-address', sentence: 'Mom can we go to the store', correct: 'Mom, can we go to the store?', punctuation: ',' },
+          { type: 'comma-compound', sentence: 'I wanted to play but it was raining', correct: 'I wanted to play, but it was raining.', punctuation: ',' },
+          { type: 'comma-placement', sentence: 'My favorite foods are pizza burgers and tacos', positions: [4, 6], correct: 'My favorite foods are pizza, burgers, and tacos.' },
+          { type: 'comma-series', items: ['dogs', 'cats', 'birds'], sentence: 'I love ___ ___ and ___.', correct: 'I love dogs, cats, and birds.' }
+        ]
+      },
+      {
+        name: 'Apostrophes - Contractions and Possession',
+        exercises: [
+          { type: 'contraction', words: 'do not', contraction: 'don\'t', options: ['dont', 'don\'t', 'do\'nt'] },
+          { type: 'contraction', words: 'can not', contraction: 'can\'t', options: ['cant', 'can\'t', 'ca\'nt'] },
+          { type: 'contraction', words: 'will not', contraction: 'won\'t', options: ['won\'t', 'will\'nt', 'wi\'nt'] },
+          { type: 'contraction', words: 'I am', contraction: 'I\'m', options: ['Im', 'I\'m', 'I\'am'] },
+          { type: 'possession', phrase: 'the toy of the dog', possessive: 'the dog\'s toy', options: ['the dogs toy', 'the dog\'s toy', 'the dogs\' toy'] },
+          { type: 'possession', phrase: 'the book of Sarah', possessive: 'Sarah\'s book', options: ['Sarahs book', 'Sarah\'s book', 'Sarahs\' book'] },
+          { type: 'apostrophe-choice', sentence: 'The cats tail is fluffy', correct: 'The cat\'s tail is fluffy.', options: ['cats', 'cat\'s', 'cats\''] },
+          { type: 'expand-contraction', contraction: 'isn\'t', expanded: 'is not', options: ['is not', 'is\'nt', 'isnot'] }
+        ]
+      },
+      {
+        name: 'Mixed Punctuation Practice',
+        exercises: [
+          { type: 'punctuation-mixed', sentence: 'What time is it', options: ['.', '?', '!'], correct: '?' },
+          { type: 'punctuation-mixed', sentence: 'I love chocolate cake', options: ['.', '?', '!'], correct: '.' },
+          { type: 'punctuation-mixed', sentence: 'Watch out for that car', options: ['.', '?', '!'], correct: '!' },
+          { type: 'punctuation-mixed', sentence: 'Where are my shoes', options: ['.', '?', '!'], correct: '?' },
+          { type: 'multiple-punctuation', sentence: 'Wow can you believe that happened', correct: 'Wow! Can you believe that happened?', marks: ['!', '?'] },
+          { type: 'comma-and-period', sentence: 'I like pizza pasta and salad', correct: 'I like pizza, pasta, and salad.', punctuation: [',', ',', '.'] },
+          { type: 'dialogue-punctuation', sentence: 'She said I will be there soon', correct: 'She said, "I will be there soon."', marks: [',', '"', '.', '"'] },
+          { type: 'punctuation-paragraph', text: 'What a great day it is The sun is shining Do you want to go outside', correct: 'What a great day it is! The sun is shining. Do you want to go outside?', marks: ['!', '.', '?'] }
         ]
       }
-    ]
+
   },
   writing: {
     name: 'Story Studio',
