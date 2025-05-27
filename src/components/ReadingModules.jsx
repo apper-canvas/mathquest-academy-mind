@@ -1748,7 +1748,6 @@ export default function ReadingModules() {
           </div>
         )
 
-  if (exerciseComplete) {
     const module = READING_MODULES[selectedModule]
     const level = module.levels[selectedLevel]
     const percentage = Math.round((correctAnswers / level.exercises.length) * 100)
