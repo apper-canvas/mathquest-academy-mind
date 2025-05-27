@@ -1748,68 +1748,6 @@ export default function ReadingModules() {
           </div>
         )
 
-    const module = READING_MODULES[selectedModule]
-    const level = module.levels[selectedLevel]
-    const percentage = Math.round((correctAnswers / level.exercises.length) * 100)
-
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900 flex items-center justify-center px-4">
-        <motion.div 
-          className="max-w-2xl w-full bg-white/70 dark:bg-surface-800/70 backdrop-blur-sm rounded-3xl p-8 shadow-floating border border-white/20 dark:border-surface-700/50 text-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className={`w-20 h-20 bg-gradient-to-br ${module.color} rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-game animate-bounce-slow`}>
-            <ApperIcon name="Trophy" className="w-10 h-10 text-white" />
-          </div>
-          
-          <h2 className="text-3xl font-bold text-surface-800 dark:text-white mb-4">
-            Level Complete!
-          </h2>
-          
-          <div className="grid grid-cols-3 gap-6 mb-8">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary">{score}</div>
-              <div className="text-sm text-surface-600 dark:text-surface-400">Points</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-secondary">{correctAnswers}/{level.exercises.length}</div>
-              <div className="text-sm text-surface-600 dark:text-surface-400">Correct</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-accent">{percentage}%</div>
-              <div className="text-sm text-surface-600 dark:text-surface-400">Accuracy</div>
-            </div>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={() => {
-                  setSelectedModule(null)
-                  setSelectedLevel(null)
-                  setExerciseComplete(false)
-                }}
-                className="flex-1 py-3 px-6 bg-gradient-to-r from-primary to-accent text-white rounded-xl font-semibold shadow-game hover:shadow-floating transition-all duration-300 flex items-center justify-center space-x-2"
-              >
-                <ApperIcon name="Home" className="w-5 h-5" />
-                <span>Back to Modules</span>
-              </button>
-              
-              <button
-                onClick={resetLevel}
-                className="flex-1 py-3 px-6 bg-white dark:bg-surface-700 text-surface-800 dark:text-white border border-surface-200 dark:border-surface-600 rounded-xl font-semibold hover:bg-surface-50 dark:hover:bg-surface-600 transition-all duration-300 flex items-center justify-center space-x-2"
-              >
-                <ApperIcon name="RotateCcw" className="w-5 h-5" />
-                <span>Try Again</span>
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    )
-  }
 
   if (selectedModule && selectedLevel !== null) {
     const module = READING_MODULES[selectedModule]
