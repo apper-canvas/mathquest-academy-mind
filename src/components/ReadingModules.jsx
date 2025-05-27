@@ -333,9 +333,9 @@ const READING_MODULES = {
           { type: 'punctuation-paragraph', text: 'What a great day it is The sun is shining Do you want to go outside', correct: 'What a great day it is! The sun is shining. Do you want to go outside?', marks: ['!', '.', '?'] }
         ]
       }
-
-
+    ]
   },
+
   writing: {
     name: 'Story Studio',
     icon: 'PenTool',
