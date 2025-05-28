@@ -349,11 +349,13 @@ const ReadingModules = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-surface-800 rounded-2xl p-8 shadow-soft"
+        className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg"
+
       >
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-medium text-surface-600 dark:text-surface-400">
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+
               Exercise {currentExercise + 1} of {selectedLesson.exercises.length}
             </span>
             <div className="flex items-center space-x-2">
@@ -363,7 +365,8 @@ const ReadingModules = () => {
                   className={`w-3 h-3 rounded-full ${
                     index <= currentExercise
                       ? 'bg-primary-500'
-                      : 'bg-surface-200 dark:bg-surface-600'
+                      : 'bg-gray-200 dark:bg-gray-600'
+
                   }`}
                 />
               ))}
@@ -371,22 +374,27 @@ const ReadingModules = () => {
           </div>
           
           {exercise.passage && (
-            <div className="mb-6 p-4 bg-surface-50 dark:bg-surface-700 rounded-xl">
-              <h4 className="font-semibold mb-2 text-surface-900 dark:text-surface-100">
+            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+
+              <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">
+
                 Read the passage:
               </h4>
-              <p className="text-surface-700 dark:text-surface-300 leading-relaxed">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+
                 {exercise.passage}
               </p>
             </div>
           )}
           
-          <h3 className="text-xl font-bold text-surface-900 dark:text-surface-100 mb-4">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+
             {exercise.question}
           </h3>
           
           {exercise.instruction && (
-            <p className="text-surface-600 dark:text-surface-400 mb-4 italic">
+            <p className="text-gray-600 dark:text-gray-400 mb-4 italic">
+
               {exercise.instruction}
             </p>
           )}
@@ -401,21 +409,24 @@ const ReadingModules = () => {
               onClick={() => handleAnswerSelect(currentExercise, index)}
               className={`w-full p-4 text-left rounded-xl border-2 transition-all ${
                 userAnswers[currentExercise] === index
-                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                  : 'border-surface-200 dark:border-surface-600 hover:border-primary-300'
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                  : 'border-gray-200 dark:border-gray-600 hover:border-blue-300'
+
               }`}
             >
               <div className="flex items-center space-x-3">
                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                   userAnswers[currentExercise] === index
-                    ? 'border-primary-500 bg-primary-500'
-                    : 'border-surface-300 dark:border-surface-500'
+                    ? 'border-blue-500 bg-blue-500'
+                    : 'border-gray-300 dark:border-gray-500'
+
                 }`}>
                   {userAnswers[currentExercise] === index && (
                     <CheckCircle className="w-4 h-4 text-white" />
                   )}
                 </div>
-                <span className="text-surface-900 dark:text-surface-100">{option}</span>
+                <span className="text-gray-900 dark:text-gray-100">{option}</span>
+
               </div>
             </motion.button>
           ))}
@@ -425,7 +436,8 @@ const ReadingModules = () => {
           <button
             onClick={() => setCurrentExercise(prev => Math.max(0, prev - 1))}
             disabled={currentExercise === 0}
-            className="px-6 py-3 bg-surface-100 dark:bg-surface-700 text-surface-700 dark:text-surface-300 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-200 dark:hover:bg-surface-600 transition-colors"
+            className="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+
           >
             Previous
           </button>
@@ -433,7 +445,8 @@ const ReadingModules = () => {
           <button
             onClick={handleNextExercise}
             disabled={userAnswers[currentExercise] === undefined}
-            className="px-6 py-3 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-3 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+
           >
             {currentExercise === selectedLesson.exercises.length - 1 ? 'Finish' : 'Next'}
           </button>
@@ -453,7 +466,8 @@ const ReadingModules = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white dark:bg-surface-800 rounded-2xl p-8 shadow-soft text-center"
+        className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg text-center"
+
       >
         <div className={`w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center ${
           score >= 80 ? 'bg-green-100 text-green-600' :
@@ -465,7 +479,8 @@ const ReadingModules = () => {
            <Target className="w-10 h-10" />}
         </div>
         
-        <h3 className="text-2xl font-bold text-surface-900 dark:text-surface-100 mb-2">
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+
           Lesson Complete!
         </h3>
         
@@ -477,7 +492,8 @@ const ReadingModules = () => {
           </span>
         </div>
         
-        <p className="text-surface-600 dark:text-surface-400 mb-6">
+        <p className="text-gray-600 dark:text-gray-400 mb-6">
+
           You got {correctAnswers} out of {totalExercises} questions correct.
         </p>
         
@@ -485,7 +501,8 @@ const ReadingModules = () => {
           {selectedLesson.exercises.map((exercise, index) => {
             const isCorrect = userAnswers[index] === exercise.correct;
             return (
-              <div key={index} className="text-left p-4 bg-surface-50 dark:bg-surface-700 rounded-xl">
+              <div key={index} className="text-left p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+
                 <div className="flex items-start space-x-3">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center mt-0.5 ${
                     isCorrect ? 'bg-green-500' : 'bg-red-500'
@@ -497,10 +514,12 @@ const ReadingModules = () => {
                     )}
                   </div>
                   <div className="flex-1">
-                    <p className="text-surface-900 dark:text-surface-100 font-medium mb-1">
+                    <p className="text-gray-900 dark:text-gray-100 font-medium mb-1">
+
                       {exercise.question}
                     </p>
-                    <p className="text-surface-600 dark:text-surface-400 text-sm">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+
                       {exercise.explanation}
                     </p>
                     {!isCorrect && (
@@ -517,7 +536,8 @@ const ReadingModules = () => {
         
         <button
           onClick={handleCompleteLesson}
-          className="px-8 py-3 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors"
+          className="px-8 py-3 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors"
+
         >
           Continue Learning
         </button>
@@ -527,12 +547,14 @@ const ReadingModules = () => {
 
   if (showResults) {
     return (
-      <div className="min-h-screen bg-surface-50 dark:bg-surface-900 p-6">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <button
               onClick={() => navigate('/')}
-              className="flex items-center space-x-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
+              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+
             >
               <Home className="w-5 h-5" />
               <span>Home</span>
@@ -550,20 +572,24 @@ const ReadingModules = () => {
 
   if (selectedLesson) {
     return (
-      <div className="min-h-screen bg-surface-50 dark:bg-surface-900 p-6">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <button
               onClick={() => setSelectedLesson(null)}
-              className="flex items-center space-x-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
+              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Back to {selectedModule.title}</span>
             </button>
-            <h1 className="text-2xl font-bold text-surface-900 dark:text-surface-100">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+
               {selectedLesson.title}
             </h1>
-            <div className="flex items-center space-x-2 text-surface-600 dark:text-surface-400">
+            <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
+
               <Clock className="w-4 h-4" />
               <span className="text-sm">{selectedLesson.duration}</span>
             </div>
@@ -576,12 +602,14 @@ const ReadingModules = () => {
 
   if (selectedModule) {
     return (
-      <div className="min-h-screen bg-surface-50 dark:bg-surface-900 p-6">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <button
               onClick={() => setSelectedModule(null)}
-              className="flex items-center space-x-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
+              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Back to Modules</span>
@@ -603,7 +631,8 @@ const ReadingModules = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white dark:bg-surface-800 rounded-2xl p-6 shadow-soft hover:shadow-card transition-all duration-300 cursor-pointer game-card-hover"
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+
                   onClick={() => handleLessonSelect(lesson)}
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -615,18 +644,22 @@ const ReadingModules = () => {
                       )}
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-surface-400" />
-                      <span className="text-sm text-surface-500 dark:text-surface-400">
+                      <Clock className="w-4 h-4 text-gray-400" />
+
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+
                         {lesson.duration}
                       </span>
                     </div>
                   </div>
                   
-                  <h3 className="text-xl font-bold text-surface-900 dark:text-surface-100 mb-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+
                     {lesson.title}
                   </h3>
                   
-                  <p className="text-surface-600 dark:text-surface-400 mb-4">
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+
                     {lesson.description}
                   </p>
                   
@@ -636,16 +669,19 @@ const ReadingModules = () => {
                         <>
                           <Star className="w-4 h-4 text-yellow-500" />
                           <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
+
                             {lessonProgress?.score}% Complete
                           </span>
                         </>
                       ) : (
-                        <span className="text-sm text-surface-500 dark:text-surface-400">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+
                           {lesson.exercises.length} exercises
                         </span>
                       )}
                     </div>
-                    <ChevronRight className="w-5 h-5 text-surface-400" />
+                    <ChevronRight className="w-5 h-5 text-gray-400" />
+
                   </div>
                 </motion.div>
               );
@@ -657,12 +693,14 @@ const ReadingModules = () => {
   }
 
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-900 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center space-x-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
+            className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+
           >
             <Home className="w-5 h-5" />
             <span>Home</span>
@@ -674,7 +712,8 @@ const ReadingModules = () => {
         </div>
 
         <div className="text-center mb-12">
-          <p className="text-xl text-surface-600 dark:text-surface-400 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+
             Master essential reading skills through interactive lessons and engaging exercises.
             Build confidence in phonics, comprehension, vocabulary, and fluency.
           </p>
@@ -694,7 +733,8 @@ const ReadingModules = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.15 }}
-                className="bg-white dark:bg-surface-800 rounded-3xl p-8 shadow-soft hover:shadow-floating transition-all duration-500 cursor-pointer game-card-hover"
+                className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 cursor-pointer"
+
                 onClick={() => handleModuleSelect(module)}
               >
                 <div className="flex items-start justify-between mb-6">
@@ -702,34 +742,41 @@ const ReadingModules = () => {
                     <Icon className="w-8 h-8 text-white" />
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-surface-900 dark:text-surface-100">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+
                       {moduleProgress}%
                     </div>
-                    <div className="text-sm text-surface-500 dark:text-surface-400">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+
                       Complete
                     </div>
                   </div>
                 </div>
                 
-                <h2 className="text-2xl font-bold text-surface-900 dark:text-surface-100 mb-3">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+
                   {module.title}
                 </h2>
                 
-                <p className="text-surface-600 dark:text-surface-400 mb-6 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+
                   {module.description}
                 </p>
                 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-surface-500 dark:text-surface-400">
+                    <span className="text-gray-500 dark:text-gray-400">
+
                       Progress
                     </span>
-                    <span className="text-surface-700 dark:text-surface-300 font-medium">
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">
+
                       {completedLessonsCount} of {module.lessons.length} lessons
                     </span>
                   </div>
                   
-                  <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${moduleProgress}%` }}
@@ -740,7 +787,8 @@ const ReadingModules = () => {
                 </div>
                 
                 <div className="flex items-center justify-between mt-6">
-                  <div className="flex items-center space-x-4 text-sm text-surface-500 dark:text-surface-400">
+                  <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+
                     <div className="flex items-center space-x-1">
                       <BookOpen className="w-4 h-4" />
                       <span>{module.lessons.length} lessons</span>
@@ -750,7 +798,8 @@ const ReadingModules = () => {
                       <span>{moduleProgress > 0 ? 'In Progress' : 'Start Learning'}</span>
                     </div>
                   </div>
-                  <ChevronRight className="w-6 h-6 text-surface-400" />
+                  <ChevronRight className="w-6 h-6 text-gray-400" />
+
                 </div>
               </motion.div>
             );
