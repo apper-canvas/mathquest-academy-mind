@@ -1,1796 +1,764 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import ApperIcon from './ApperIcon'
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  BookOpen, 
+  Target, 
+  Award, 
+  ArrowLeft, 
+  Play, 
+  CheckCircle, 
+  Star,
+  Volume2,
+  Eye,
+  Brain,
+  Zap,
+  Clock,
+  BarChart3,
+  Trophy,
+  ChevronRight,
+  Home
+} from 'lucide-react';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-const READING_MODULES = {
-  phonics: {
-    name: 'Phonics Playground',
-    icon: 'Volume2',
-    color: 'from-blue-400 to-blue-600',
-    description: 'Learn letter sounds and phonetic patterns',
-    levels: [
-      {
-        name: 'Letter Sounds',
-        exercises: [
-          { type: 'phonics-match', letter: 'A', sound: 'ay', words: ['apple', 'ant', 'arrow'] },
-          { type: 'phonics-match', letter: 'B', sound: 'buh', words: ['ball', 'bear', 'book'] },
-          { type: 'phonics-match', letter: 'C', sound: 'kuh', words: ['cat', 'car', 'cake'] }
-        ]
-      },
-      {
-        name: 'Blending Sounds',
-        exercises: [
-          { type: 'blend-words', sounds: ['c', 'a', 't'], word: 'cat' },
-          { type: 'blend-words', sounds: ['d', 'o', 'g'], word: 'dog' },
-          { type: 'blend-words', sounds: ['r', 'u', 'n'], word: 'run' }
-        ]
-      },
-      {
-        name: 'Rhyming Patterns',
-        exercises: [
-          { type: 'rhyme-match', word: 'cat', rhymes: ['bat', 'hat', 'mat'], nonRhyme: 'dog' },
-          { type: 'rhyme-match', word: 'sun', rhymes: ['fun', 'run', 'bun'], nonRhyme: 'car' },
-          { type: 'rhyme-match', word: 'book', rhymes: ['look', 'took', 'cook'], nonRhyme: 'pen' }
-        ]
-      }
-    ]
-  },
-  vocabulary: {
-    name: 'Vocabulary Village',
-    icon: 'BookOpen',
-    color: 'from-green-400 to-green-600',
-    description: 'Build your word knowledge and understanding',
-    levels: [
-      {
-        name: 'Basic Words',
-        exercises: [
-          { type: 'word-picture', word: 'house', image: '🏠', options: ['house', 'car', 'tree'] },
-          { type: 'word-picture', word: 'apple', image: '🍎', options: ['orange', 'apple', 'banana'] },
-          { type: 'word-picture', word: 'dog', image: '🐕', options: ['cat', 'bird', 'dog'] }
-        ]
-      },
-      {
-        name: 'Synonyms & Antonyms',
-        exercises: [
-          { type: 'synonym-match', word: 'happy', synonym: 'joyful', options: ['sad', 'joyful', 'angry'] },
-          { type: 'antonym-match', word: 'big', antonym: 'small', options: ['large', 'huge', 'small'] },
-          { type: 'synonym-match', word: 'fast', synonym: 'quick', options: ['slow', 'quick', 'lazy'] }
-        ]
-      },
-      {
-        name: 'Context Clues',
-        exercises: [
-          { type: 'context-clue', sentence: 'The cat was very _____ after playing all day.', word: 'tired', options: ['happy', 'tired', 'hungry'] },
-          { type: 'context-clue', sentence: 'She opened her _____ to let in fresh air.', word: 'window', options: ['door', 'window', 'book'] },
-          { type: 'context-clue', sentence: 'The bright _____ helped him see in the dark.', word: 'light', options: ['sound', 'light', 'smell'] }
-        ]
-      }
-    ]
-  },
-  comprehension: {
-    name: 'Reading Comprehension',
-    icon: 'Eye',
-    color: 'from-purple-400 to-purple-600',
-    description: 'Understand and analyze what you read',
-    levels: [
-      {
-        name: 'Short Stories',
-        exercises: [
-          { 
-            type: 'story-comprehension', 
-            story: 'Sam has a red ball. He plays with it in the park. The ball rolls under a tree. Sam runs to get it.',
-            question: 'What color is Sam\'s ball?',
-            answer: 'red',
-            options: ['blue', 'red', 'green']
-          },
-          { 
-            type: 'story-comprehension', 
-            story: 'Maya loves to read books. She reads every night before bed. Her favorite books are about animals.',
-            question: 'When does Maya read?',
-            answer: 'before bed',
-            options: ['in the morning', 'before bed', 'at lunch']
-          },
-          { 
-            type: 'story-comprehension', 
-            story: 'The sun is shining bright today. Birds are singing in the trees. It\'s a perfect day for a picnic.',
-            question: 'What kind of day is it?',
-            answer: 'sunny',
-            options: ['rainy', 'cloudy', 'sunny']
-          }
-        ]
-      },
-      {
-        name: 'Main Ideas',
-        exercises: [
-          { 
-            type: 'main-idea', 
-            passage: 'Dogs make great pets. They are loyal and friendly. Dogs can learn tricks and help people. Many families love having dogs.',
-            mainIdea: 'Dogs make great pets',
-            options: ['Dogs can learn tricks', 'Dogs make great pets', 'Dogs are animals']
-          },
-          { 
-            type: 'main-idea', 
-            passage: 'Plants need water, sunlight, and soil to grow. Without these things, plants will die. Taking care of plants helps them stay healthy.',
-            mainIdea: 'Plants need care to grow',
-            options: ['Plants are green', 'Plants need care to grow', 'Plants make oxygen']
-          }
-        ]
-      },
-      {
-        name: 'Story Details',
-        exercises: [
-          { 
-            type: 'detail-question', 
-            passage: 'Emma packed her blue backpack with books, pencils, and an apple. She walked to school with her friend Jake.',
-            question: 'What did Emma pack in her backpack?',
-            answer: 'books, pencils, and an apple',
-            options: ['toys and games', 'books, pencils, and an apple', 'lunch and water']
-          }
-        ]
-      }
-    ]
-  },
-  sightWords: {
-    name: 'Sight Words Safari',
-    icon: 'Target',
-    color: 'from-red-400 to-red-600',
-    description: 'Master high-frequency sight words',
-    levels: [
-      {
-        name: 'Common Words',
-        exercises: [
-          { type: 'sight-word-flash', word: 'the', options: ['the', 'they', 'then'] },
-          { type: 'sight-word-flash', word: 'and', options: ['an', 'and', 'end'] },
-          { type: 'sight-word-flash', word: 'you', options: ['you', 'your', 'yes'] }
-        ]
-      },
-      {
-        name: 'Word Families',
-        exercises: [
-          { type: 'word-family', family: '-at', words: ['cat', 'bat', 'hat', 'mat'], nonFamily: 'dog' },
-          { type: 'word-family', family: '-an', words: ['can', 'man', 'ran', 'pan'], nonFamily: 'sun' },
-          { type: 'word-family', family: '-et', words: ['pet', 'net', 'wet', 'set'], nonFamily: 'car' }
-        ]
-      },
-      {
-        name: 'Reading Fluency',
-        exercises: [
-          { type: 'fluency-read', sentence: 'The cat sat on the mat.', words: ['The', 'cat', 'sat', 'on', 'the', 'mat'] },
-          { type: 'fluency-read', sentence: 'I can see a big dog.', words: ['I', 'can', 'see', 'a', 'big', 'dog'] },
-          { type: 'fluency-read', sentence: 'We like to play games.', words: ['We', 'like', 'to', 'play', 'games'] }
-        ]
-      }
-    ]
-  },
-  grammar: {
-    name: 'Grammar Garden',
-    icon: 'Edit3',
-    color: 'from-orange-400 to-orange-600',
-    description: 'Learn proper grammar and sentence structure',
-    levels: [
-      {
-        name: 'Nouns - People, Places, Things',
-        exercises: [
-          { type: 'part-of-speech', word: 'teacher', partOfSpeech: 'noun', category: 'person', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'school', partOfSpeech: 'noun', category: 'place', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'book', partOfSpeech: 'noun', category: 'thing', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'doctor', partOfSpeech: 'noun', category: 'person', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'park', partOfSpeech: 'noun', category: 'place', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'car', partOfSpeech: 'noun', category: 'thing', options: ['noun', 'verb', 'adjective'] },
-          { type: 'noun-category', word: 'firefighter', category: 'person', options: ['person', 'place', 'thing'] },
-          { type: 'noun-category', word: 'library', category: 'place', options: ['person', 'place', 'thing'] },
-          { type: 'noun-category', word: 'bicycle', category: 'thing', options: ['person', 'place', 'thing'] }
-        ]
-      },
-      {
-        name: 'Verbs - Action Words',
-        exercises: [
-          { type: 'part-of-speech', word: 'run', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'jump', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'sing', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'write', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'dance', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective'] },
-          { type: 'verb-tense', word: 'walked', tense: 'past', options: ['present', 'past', 'future'] },
-          { type: 'verb-tense', word: 'running', tense: 'present', options: ['present', 'past', 'future'] },
-          { type: 'verb-tense', word: 'will play', tense: 'future', options: ['present', 'past', 'future'] },
-          { type: 'action-verb', sentence: 'The cat _____ on the mat.', verb: 'sits', options: ['sits', 'happy', 'big'] }
-        ]
-      },
-      {
-        name: 'Adjectives - Describing Words',
-        exercises: [
-          { type: 'part-of-speech', word: 'big', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'happy', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'red', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'fast', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
-          { type: 'part-of-speech', word: 'small', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective'] },
-          { type: 'adjective-sentence', sentence: 'The _____ dog barked loudly.', adjective: 'loud', options: ['loud', 'run', 'quickly'] },
-          { type: 'adjective-sentence', sentence: 'She wore a _____ dress.', adjective: 'beautiful', options: ['beautiful', 'dance', 'tomorrow'] },
-          { type: 'adjective-sentence', sentence: 'The _____ ice cream melted.', adjective: 'cold', options: ['cold', 'melt', 'spoon'] },
-          { type: 'compare-adjectives', word: 'bigger', comparison: 'comparative', options: ['positive', 'comparative', 'superlative'] }
-        ]
-      },
-      {
-        name: 'Pronouns - Replacing Nouns',
-        exercises: [
-          { type: 'part-of-speech', word: 'he', partOfSpeech: 'pronoun', options: ['noun', 'verb', 'pronoun'] },
-          { type: 'part-of-speech', word: 'she', partOfSpeech: 'pronoun', options: ['noun', 'verb', 'pronoun'] },
-          { type: 'part-of-speech', word: 'it', partOfSpeech: 'pronoun', options: ['noun', 'verb', 'pronoun'] },
-          { type: 'part-of-speech', word: 'they', partOfSpeech: 'pronoun', options: ['noun', 'verb', 'pronoun'] },
-          { type: 'pronoun-replace', sentence: 'Tom likes pizza. _____ eats it every day.', pronoun: 'He', options: ['He', 'She', 'It'] },
-          { type: 'pronoun-replace', sentence: 'The cat is sleeping. _____ looks peaceful.', pronoun: 'It', options: ['He', 'She', 'It'] },
-          { type: 'pronoun-replace', sentence: 'My friends are coming. _____ will be here soon.', pronoun: 'They', options: ['He', 'She', 'They'] },
-          { type: 'possessive-pronoun', sentence: 'This is _____ book.', pronoun: 'my', options: ['my', 'me', 'I'] },
-          { type: 'possessive-pronoun', sentence: 'The dog wagged _____ tail.', pronoun: 'its', options: ['its', 'it', 'his'] }
-        ]
-      },
-      {
-        name: 'Adverbs - Describing Actions',
-        exercises: [
-          { type: 'part-of-speech', word: 'quickly', partOfSpeech: 'adverb', options: ['adjective', 'verb', 'adverb'] },
-          { type: 'part-of-speech', word: 'slowly', partOfSpeech: 'adverb', options: ['adjective', 'verb', 'adverb'] },
-          { type: 'part-of-speech', word: 'carefully', partOfSpeech: 'adverb', options: ['adjective', 'verb', 'adverb'] },
-          { type: 'part-of-speech', word: 'loudly', partOfSpeech: 'adverb', options: ['adjective', 'verb', 'adverb'] },
-          { type: 'adverb-sentence', sentence: 'She ran _____ to catch the bus.', adverb: 'quickly', options: ['quickly', 'quick', 'fast'] },
-          { type: 'adverb-sentence', sentence: 'He spoke _____ to the baby.', adverb: 'softly', options: ['softly', 'soft', 'quiet'] },
-          { type: 'adverb-sentence', sentence: 'They worked _____ on the project.', adverb: 'carefully', options: ['carefully', 'careful', 'care'] },
-          { type: 'adverb-question', question: 'How did she sing?', adverb: 'beautifully', options: ['beautiful', 'beautifully', 'beauty'] },
-          { type: 'adverb-question', question: 'When will we leave?', adverb: 'tomorrow', options: ['tomorrow', 'today', 'yesterday'] }
-        ]
-      },
-      {
-        name: 'Mixed Parts of Speech',
-        exercises: [
-          { type: 'identify-all-parts', sentence: 'The happy dog runs quickly.', words: [{ word: 'dog', part: 'noun' }, { word: 'happy', part: 'adjective' }, { word: 'runs', part: 'verb' }, { word: 'quickly', part: 'adverb' }] },
-          { type: 'identify-all-parts', sentence: 'She carefully picked the red flowers.', words: [{ word: 'She', part: 'pronoun' }, { word: 'carefully', part: 'adverb' }, { word: 'picked', part: 'verb' }, { word: 'flowers', part: 'noun' }] },
-          { type: 'part-of-speech', word: 'beautiful', partOfSpeech: 'adjective', options: ['noun', 'verb', 'adjective', 'adverb'] },
-          { type: 'part-of-speech', word: 'teacher', partOfSpeech: 'noun', options: ['noun', 'verb', 'adjective', 'pronoun'] },
-          { type: 'part-of-speech', word: 'whispered', partOfSpeech: 'verb', options: ['noun', 'verb', 'adjective', 'adverb'] },
-          { type: 'complete-sentence', sentence: 'The _____ (adjective) cat _____ (verb) _____ (adverb).', words: { adjective: 'fluffy', verb: 'sleeps', adverb: 'peacefully' } },
-          { type: 'sort-parts', words: ['run', 'happy', 'quickly', 'dog', 'she', 'beautiful'], categories: { nouns: ['dog'], verbs: ['run'], adjectives: ['happy', 'beautiful'], adverbs: ['quickly'], pronouns: ['she'] } }
-        ]
-      },
-      {
-        name: 'Periods - Ending Statements',
-        exercises: [
-          { type: 'punctuation', sentence: 'I like to read books', correct: 'I like to read books.', punctuation: '.' },
-          { type: 'punctuation', sentence: 'The cat is sleeping', correct: 'The cat is sleeping.', punctuation: '.' },
-          { type: 'punctuation', sentence: 'We went to the park', correct: 'We went to the park.', punctuation: '.' },
-          { type: 'punctuation', sentence: 'My name is Sarah', correct: 'My name is Sarah.', punctuation: '.' },
-          { type: 'punctuation', sentence: 'The sun is bright today', correct: 'The sun is bright today.', punctuation: '.' },
-          { type: 'period-choice', sentence: 'Birds can fly', options: ['.', '?', '!'], correct: '.' },
-          { type: 'period-choice', sentence: 'I have a pet dog', options: ['.', '?', '!'], correct: '.' },
-          { type: 'period-choice', sentence: 'She likes ice cream', options: ['.', '?', '!'], correct: '.' },
-          { type: 'statement-identify', sentence: 'The flowers are beautiful', type: 'statement', options: ['statement', 'question', 'exclamation'] }
-        ]
-      },
-      {
-        name: 'Question Marks - Asking Questions',
-        exercises: [
-          { type: 'punctuation', sentence: 'What is your name', correct: 'What is your name?', punctuation: '?' },
-          { type: 'punctuation', sentence: 'How old are you', correct: 'How old are you?', punctuation: '?' },
-          { type: 'punctuation', sentence: 'Where do you live', correct: 'Where do you live?', punctuation: '?' },
-          { type: 'punctuation', sentence: 'Can you help me', correct: 'Can you help me?', punctuation: '?' },
-          { type: 'punctuation', sentence: 'Do you like pizza', correct: 'Do you like pizza?', punctuation: '?' },
-          { type: 'question-choice', sentence: 'Why is the sky blue', options: ['.', '?', '!'], correct: '?' },
-          { type: 'question-choice', sentence: 'When will we eat lunch', options: ['.', '?', '!'], correct: '?' },
-          { type: 'question-choice', sentence: 'Who is your teacher', options: ['.', '?', '!'], correct: '?' },
-          { type: 'question-identify', sentence: 'Are you coming to the party', type: 'question', options: ['statement', 'question', 'exclamation'] }
-        ]
-      },
-      {
-        name: 'Exclamation Points - Showing Excitement',
-        exercises: [
-          { type: 'punctuation', sentence: 'Wow, that\'s amazing', correct: 'Wow, that\'s amazing!', punctuation: '!' },
-          { type: 'punctuation', sentence: 'Help me', correct: 'Help me!', punctuation: '!' },
-          { type: 'punctuation', sentence: 'What a beautiful day', correct: 'What a beautiful day!', punctuation: '!' },
-          { type: 'punctuation', sentence: 'I won the game', correct: 'I won the game!', punctuation: '!' },
-          { type: 'punctuation', sentence: 'Look out', correct: 'Look out!', punctuation: '!' },
-          { type: 'exclamation-choice', sentence: 'That was incredible', options: ['.', '?', '!'], correct: '!' },
-          { type: 'exclamation-choice', sentence: 'Stop right there', options: ['.', '?', '!'], correct: '!' },
-          { type: 'exclamation-choice', sentence: 'Happy birthday', options: ['.', '?', '!'], correct: '!' },
-          { type: 'exclamation-identify', sentence: 'What a surprise', type: 'exclamation', options: ['statement', 'question', 'exclamation'] }
-        ]
-      },
-      {
-        name: 'Commas - Lists and Pauses',
-        exercises: [
-          { type: 'comma-list', sentence: 'I like apples oranges and bananas', correct: 'I like apples, oranges, and bananas.', punctuation: ',' },
-          { type: 'comma-list', sentence: 'We need pencils paper and erasers', correct: 'We need pencils, paper, and erasers.', punctuation: ',' },
-          { type: 'comma-list', sentence: 'The colors are red blue and green', correct: 'The colors are red, blue, and green.', punctuation: ',' },
-          { type: 'comma-address', sentence: 'Yes I will come to the party', correct: 'Yes, I will come to the party.', punctuation: ',' },
-          { type: 'comma-address', sentence: 'Mom can we go to the store', correct: 'Mom, can we go to the store?', punctuation: ',' },
-          { type: 'comma-compound', sentence: 'I wanted to play but it was raining', correct: 'I wanted to play, but it was raining.', punctuation: ',' },
-          { type: 'comma-placement', sentence: 'My favorite foods are pizza burgers and tacos', positions: [4, 6], correct: 'My favorite foods are pizza, burgers, and tacos.' },
-          { type: 'comma-series', items: ['dogs', 'cats', 'birds'], sentence: 'I love ___ ___ and ___.', correct: 'I love dogs, cats, and birds.' }
-        ]
-      },
-      {
-        name: 'Apostrophes - Contractions and Possession',
-        exercises: [
-          { type: 'contraction', words: 'do not', contraction: 'don\'t', options: ['dont', 'don\'t', 'do\'nt'] },
-          { type: 'contraction', words: 'can not', contraction: 'can\'t', options: ['cant', 'can\'t', 'ca\'nt'] },
-          { type: 'contraction', words: 'will not', contraction: 'won\'t', options: ['won\'t', 'will\'nt', 'wi\'nt'] },
-          { type: 'contraction', words: 'I am', contraction: 'I\'m', options: ['Im', 'I\'m', 'I\'am'] },
-          { type: 'possession', phrase: 'the toy of the dog', possessive: 'the dog\'s toy', options: ['the dogs toy', 'the dog\'s toy', 'the dogs\' toy'] },
-          { type: 'possession', phrase: 'the book of Sarah', possessive: 'Sarah\'s book', options: ['Sarahs book', 'Sarah\'s book', 'Sarahs\' book'] },
-          { type: 'apostrophe-choice', sentence: 'The cats tail is fluffy', correct: 'The cat\'s tail is fluffy.', options: ['cats', 'cat\'s', 'cats\''] },
-          { type: 'expand-contraction', contraction: 'isn\'t', expanded: 'is not', options: ['is not', 'is\'nt', 'isnot'] }
-        ]
-      },
-      {
-        name: 'Mixed Punctuation Practice',
-        exercises: [
-          { type: 'punctuation-mixed', sentence: 'What time is it', options: ['.', '?', '!'], correct: '?' },
-          { type: 'punctuation-mixed', sentence: 'I love chocolate cake', options: ['.', '?', '!'], correct: '.' },
-          { type: 'punctuation-mixed', sentence: 'Watch out for that car', options: ['.', '?', '!'], correct: '!' },
-          { type: 'punctuation-mixed', sentence: 'Where are my shoes', options: ['.', '?', '!'], correct: '?' },
-          { type: 'multiple-punctuation', sentence: 'Wow can you believe that happened', correct: 'Wow! Can you believe that happened?', marks: ['!', '?'] },
-          { type: 'comma-and-period', sentence: 'I like pizza pasta and salad', correct: 'I like pizza, pasta, and salad.', punctuation: [',', ',', '.'] },
-          { type: 'dialogue-punctuation', sentence: 'She said I will be there soon', correct: 'She said, "I will be there soon."', marks: [',', '"', '.', '"'] },
-          { type: 'punctuation-paragraph', text: 'What a great day it is The sun is shining Do you want to go outside', correct: 'What a great day it is! The sun is shining. Do you want to go outside?', marks: ['!', '.', '?'] }
-        ]
-      }
-    ]
-  },
-
-  writing: {
-    name: 'Story Studio',
-    icon: 'PenTool',
-    color: 'from-teal-400 to-teal-600',
-    description: 'Create stories and improve writing skills',
-    levels: [
-      {
-        name: 'Creative Writing',
-        exercises: [
-          { type: 'story-starter', prompt: 'Once upon a time, there was a magical...', minWords: 10 },
-          { type: 'story-starter', prompt: 'The door creaked open and inside was...', minWords: 10 },
-          { type: 'story-starter', prompt: 'If I could fly, I would...', minWords: 10 }
-        ]
-      },
-      {
-        name: 'Story Elements',
-        exercises: [
-          { type: 'story-element', element: 'character', question: 'Who is the main character in your story?', example: 'A brave knight named Sir Alex' },
-          { type: 'story-element', element: 'setting', question: 'Where does your story take place?', example: 'In a magical forest full of talking animals' },
-          { type: 'story-element', element: 'problem', question: 'What problem does the character face?', example: 'The character gets lost in a maze' }
-        ]
-      },
-      {
-        name: 'Character Development',
-        exercises: [
-          { type: 'character-trait', question: 'Describe your character\'s personality', traits: ['brave', 'kind', 'funny', 'smart', 'curious'] },
-          { type: 'character-appearance', question: 'What does your character look like?', features: ['tall', 'short', 'curly hair', 'blue eyes', 'freckles'] },
-          { type: 'character-goal', question: 'What does your character want to achieve?', goals: ['save the day', 'find treasure', 'make friends', 'learn something new'] }
-        ]
-      }
-    ]
-  }
-}
-
-export default function ReadingModules() {
-  const [selectedModule, setSelectedModule] = useState(null)
-  const [selectedLevel, setSelectedLevel] = useState(null)
-  const [currentExercise, setCurrentExercise] = useState(0)
-  const [userAnswer, setUserAnswer] = useState('')
-  const [showResult, setShowResult] = useState(false)
-  const [score, setScore] = useState(0)
-  const [correctAnswers, setCorrectAnswers] = useState(0)
-  const [progress, setProgress] = useState({})
-  const [exerciseComplete, setExerciseComplete] = useState(false)
-  const [draggedItem, setDraggedItem] = useState(null)
-  const [storyText, setStoryText] = useState('')
-  const [selectedOptions, setSelectedOptions] = useState([])
+const ReadingModules = () => {
+  const navigate = useNavigate();
+  const [selectedModule, setSelectedModule] = useState(null);
+  const [selectedLesson, setSelectedLesson] = useState(null);
+  const [progress, setProgress] = useState({});
+  const [completedLessons, setCompletedLessons] = useState(new Set());
+  const [currentExercise, setCurrentExercise] = useState(0);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
     // Load progress from localStorage
-    const savedProgress = localStorage.getItem('readingModulesProgress')
+    const savedProgress = localStorage.getItem('readingModulesProgress');
+    const savedCompleted = localStorage.getItem('readingModulesCompleted');
+    
     if (savedProgress) {
-      setProgress(JSON.parse(savedProgress))
+      setProgress(JSON.parse(savedProgress));
     }
-  }, [])
-
-  const saveProgress = (moduleId, levelIndex, exerciseIndex, isCorrect) => {
-    const newProgress = { ...progress }
-    if (!newProgress[moduleId]) {
-      newProgress[moduleId] = {}
+    if (savedCompleted) {
+      setCompletedLessons(new Set(JSON.parse(savedCompleted)));
     }
-    if (!newProgress[moduleId][levelIndex]) {
-      newProgress[moduleId][levelIndex] = { completed: [], score: 0 }
+  }, []);
+
+  const saveProgress = (newProgress, newCompleted) => {
+    localStorage.setItem('readingModulesProgress', JSON.stringify(newProgress));
+    localStorage.setItem('readingModulesCompleted', JSON.stringify(Array.from(newCompleted)));
+  };
+
+  const readingModules = [
+    {
+      id: 'phonics',
+      title: 'Phonics Fundamentals',
+      description: 'Master letter sounds and word formation',
+      icon: Volume2,
+      color: 'from-pink-500 to-rose-500',
+      lessons: [
+        {
+          id: 'phonics-1',
+          title: 'Letter Sounds A-M',
+          description: 'Learn the sounds of letters A through M',
+          duration: '15 min',
+          exercises: [
+            {
+              type: 'sound-match',
+              question: 'Which letter makes the /a/ sound?',
+              options: ['A', 'E', 'I', 'O'],
+              correct: 0,
+              explanation: 'The letter A makes the /a/ sound as in "apple"'
+            },
+            {
+              type: 'sound-match',
+              question: 'Which letter makes the /b/ sound?',
+              options: ['D', 'B', 'P', 'T'],
+              correct: 1,
+              explanation: 'The letter B makes the /b/ sound as in "ball"'
+            },
+            {
+              type: 'word-build',
+              question: 'Build the word "CAT" using the letters below',
+              letters: ['C', 'A', 'T', 'R', 'S'],
+              correct: ['C', 'A', 'T'],
+              explanation: 'CAT is spelled C-A-T with the sounds /k/ /a/ /t/'
+            }
+          ]
+        },
+        {
+          id: 'phonics-2',
+          title: 'Letter Sounds N-Z',
+          description: 'Complete your alphabet sound knowledge',
+          duration: '18 min',
+          exercises: [
+            {
+              type: 'sound-match',
+              question: 'Which letter makes the /n/ sound?',
+              options: ['M', 'N', 'R', 'H'],
+              correct: 1,
+              explanation: 'The letter N makes the /n/ sound as in "net"'
+            },
+            {
+              type: 'sound-match',
+              question: 'Which letter makes the /z/ sound?',
+              options: ['S', 'C', 'Z', 'X'],
+              correct: 2,
+              explanation: 'The letter Z makes the /z/ sound as in "zoo"'
+            }
+          ]
+        },
+        {
+          id: 'phonics-3',
+          title: 'Blending Sounds',
+          description: 'Combine letter sounds to read words',
+          duration: '20 min',
+          exercises: [
+            {
+              type: 'blend-practice',
+              question: 'Blend these sounds: /d/ /o/ /g/',
+              options: ['dig', 'dog', 'bag', 'big'],
+              correct: 1,
+              explanation: 'Blending /d/ /o/ /g/ makes the word "dog"'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'comprehension',
+      title: 'Reading Comprehension',
+      description: 'Understand and analyze what you read',
+      icon: Brain,
+      color: 'from-blue-500 to-cyan-500',
+      lessons: [
+        {
+          id: 'comp-1',
+          title: 'Main Ideas',
+          description: 'Identify the central message of a text',
+          duration: '25 min',
+          exercises: [
+            {
+              type: 'passage-analysis',
+              passage: 'The sun is very hot. It gives us light during the day. Plants need sunlight to grow. Without the sun, Earth would be very cold and dark.',
+              question: 'What is the main idea of this passage?',
+              options: [
+                'Plants need water to grow',
+                'The sun is important for life on Earth',
+                'Earth is a planet',
+                'Day and night cycle'
+              ],
+              correct: 1,
+              explanation: 'The passage explains how the sun provides heat, light, and energy for plant growth, showing its importance for life.'
+            }
+          ]
+        },
+        {
+          id: 'comp-2',
+          title: 'Supporting Details',
+          description: 'Find evidence that supports main ideas',
+          duration: '22 min',
+          exercises: [
+            {
+              type: 'detail-identification',
+              passage: 'Butterflies are amazing insects. They start as caterpillars, then form a chrysalis, and finally emerge as beautiful butterflies. This process is called metamorphosis.',
+              question: 'Which detail supports that butterflies are amazing?',
+              options: [
+                'They are insects',
+                'They go through metamorphosis',
+                'They have wings',
+                'They eat flowers'
+              ],
+              correct: 1,
+              explanation: 'The metamorphosis process shows how amazing butterflies are by describing their transformation.'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'vocabulary',
+      title: 'Vocabulary Building',
+      description: 'Expand your word knowledge and usage',
+      icon: BookOpen,
+      color: 'from-green-500 to-emerald-500',
+      lessons: [
+        {
+          id: 'vocab-1',
+          title: 'Context Clues',
+          description: 'Use surrounding words to understand new vocabulary',
+          duration: '20 min',
+          exercises: [
+            {
+              type: 'context-clues',
+              sentence: 'The enormous elephant trumpeted loudly in the zoo.',
+              question: 'What does "enormous" mean?',
+              options: ['small', 'very large', 'gray', 'friendly'],
+              correct: 1,
+              explanation: 'Context clues like "elephant" help us understand that enormous means very large.'
+            }
+          ]
+        },
+        {
+          id: 'vocab-2',
+          title: 'Synonyms and Antonyms',
+          description: 'Learn words with similar and opposite meanings',
+          duration: '18 min',
+          exercises: [
+            {
+              type: 'synonym-match',
+              question: 'Which word is a synonym for "happy"?',
+              options: ['sad', 'joyful', 'angry', 'tired'],
+              correct: 1,
+              explanation: 'Joyful and happy both describe feeling good and pleased.'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'fluency',
+      title: 'Reading Fluency',
+      description: 'Read smoothly, accurately, and with expression',
+      icon: Zap,
+      color: 'from-purple-500 to-violet-500',
+      lessons: [
+        {
+          id: 'fluency-1',
+          title: 'Sight Words',
+          description: 'Master common words for faster reading',
+          duration: '15 min',
+          exercises: [
+            {
+              type: 'sight-word-practice',
+              question: 'Which is a sight word you should know instantly?',
+              options: ['elephant', 'the', 'microscope', 'butterfly'],
+              correct: 1,
+              explanation: '"The" is a sight word that appears frequently and should be recognized instantly.'
+            }
+          ]
+        },
+        {
+          id: 'fluency-2',
+          title: 'Reading Pace',
+          description: 'Develop appropriate reading speed',
+          duration: '25 min',
+          exercises: [
+            {
+              type: 'pace-practice',
+              passage: 'The quick brown fox jumps over the lazy dog.',
+              question: 'Read this sentence with good pace and expression.',
+              instruction: 'Focus on reading smoothly without rushing.',
+              correct: 0,
+              explanation: 'Good reading pace means reading at a speed that allows for understanding while maintaining flow.'
+            }
+          ]
+        }
+      ]
     }
-    
-    if (!newProgress[moduleId][levelIndex].completed.includes(exerciseIndex)) {
-      newProgress[moduleId][levelIndex].completed.push(exerciseIndex)
-    }
-    
-    if (isCorrect) {
-      newProgress[moduleId][levelIndex].score += 10
-    }
-    
-    setProgress(newProgress)
-    localStorage.setItem('readingModulesProgress', JSON.stringify(newProgress))
-  }
+  ];
 
-  const handleModuleSelect = (moduleId) => {
-    setSelectedModule(moduleId)
-    setSelectedLevel(null)
-    setCurrentExercise(0)
-    setScore(0)
-    setCorrectAnswers(0)
-    setExerciseComplete(false)
-    setStoryText('')
-    setSelectedOptions([])
-  }
+  const handleModuleSelect = (module) => {
+    setSelectedModule(module);
+    setSelectedLesson(null);
+    setCurrentExercise(0);
+    setUserAnswers({});
+    setShowResults(false);
+  };
 
-  const handleLevelSelect = (levelIndex) => {
-    setSelectedLevel(levelIndex)
-    setCurrentExercise(0)
-    setUserAnswer('')
-    setShowResult(false)
-    setScore(0)
-    setCorrectAnswers(0)
-    setExerciseComplete(false)
-    setStoryText('')
-    setSelectedOptions([])
-  }
+  const handleLessonSelect = (lesson) => {
+    setSelectedLesson(lesson);
+    setCurrentExercise(0);
+    setUserAnswers({});
+    setShowResults(false);
+  };
 
-  const handleAnswerSubmit = () => {
-    const module = READING_MODULES[selectedModule]
-    const level = module.levels[selectedLevel]
-    const exercise = level.exercises[currentExercise]
-    
-    let isCorrect = false
-    
-    // Check answer based on exercise type
-    // Check answer based on exercise type
-    switch (exercise.type) {
-      case 'phonics-match':
-      case 'word-picture':
-      case 'synonym-match':
-      case 'antonym-match':
-      case 'context-clue':
-      case 'story-comprehension':
-      case 'main-idea':
-      case 'detail-question':
-      case 'sight-word-flash':
-      case 'part-of-speech':
-      case 'noun-category':
-      case 'verb-tense':
-      case 'adjective-sentence':
-      case 'adverb-sentence':
-      case 'pronoun-replace':
-      case 'possessive-pronoun':
-      case 'period-choice':
-      case 'question-choice':
-      case 'exclamation-choice':
-      case 'punctuation-mixed':
-      case 'contraction':
-      case 'possession':
-      case 'apostrophe-choice':
-      case 'expand-contraction':
-        const correctAnswer = exercise.answer || exercise.synonym || exercise.antonym || exercise.word || exercise.mainIdea || exercise.partOfSpeech || exercise.correct || exercise.category || exercise.tense || exercise.adjective || exercise.adverb || exercise.pronoun || exercise.verb || exercise.contraction || exercise.possessive || exercise.expanded || '';
-        isCorrect = userAnswer && correctAnswer ? userAnswer.toLowerCase() === correctAnswer.toLowerCase() : false;
-        break
-      case 'blend-words':
-        isCorrect = userAnswer.toLowerCase() === exercise.word.toLowerCase()
-        break
-      case 'rhyme-match':
-        isCorrect = selectedOptions.some(option => exercise.rhymes.includes(option))
-        break
-      case 'word-family':
-        isCorrect = selectedOptions.some(option => exercise.words.includes(option))
-        break
-      case 'sentence-order':
-        isCorrect = userAnswer.trim() === exercise.correct
-        break
-      case 'punctuation':
-      case 'comma-list':
-      case 'comma-address':
-      case 'comma-compound':
-        isCorrect = userAnswer === exercise.correct
-        break
-      case 'story-starter':
-        isCorrect = storyText.split(' ').length >= exercise.minWords
-        break
-      case 'story-element':
-      case 'character-trait':
-      case 'character-appearance':
-      case 'character-goal':
-        isCorrect = userAnswer.trim().length > 5 // Basic validation for creative responses
-        break
-      case 'fluency-read':
-        isCorrect = selectedOptions.length === exercise.words.length
-        break
-      case 'identify-all-parts':
-        isCorrect = selectedOptions.length >= exercise.words.length
-        break
-      case 'complete-sentence':
-        isCorrect = userAnswer.trim().length > 10
-        break
-      case 'sort-parts':
-        isCorrect = selectedOptions.length >= Object.values(exercise.categories).flat().length
-        break
-      case 'statement-identify':
-      case 'question-identify':
-      case 'exclamation-identify':
-        isCorrect = userAnswer === exercise.type || userAnswer === exercise.correct
-        break
-      case 'comma-placement':
-        isCorrect = userAnswer === exercise.correct
-        break
-      case 'comma-series':
-        isCorrect = userAnswer === exercise.correct
-        break
-      case 'multiple-punctuation':
-        isCorrect = userAnswer === exercise.correct
-        break
-      case 'comma-and-period':
-        isCorrect = userAnswer === exercise.correct
-        break
-      case 'dialogue-punctuation':
-        isCorrect = userAnswer === exercise.correct
-        break
-      case 'punctuation-paragraph':
-        isCorrect = userAnswer === exercise.correct
-        break
-      case 'compare-adjectives':
-        isCorrect = userAnswer === exercise.comparison
-        break
-      case 'adverb-question':
-        isCorrect = userAnswer === exercise.adverb
-        break
-      case 'action-verb':
-        isCorrect = userAnswer === exercise.verb
-        break
-      default:
-        isCorrect = false
-    }
+  const handleAnswerSelect = (exerciseIndex, answerIndex) => {
+    setUserAnswers(prev => ({
+      ...prev,
+      [exerciseIndex]: answerIndex
+    }));
+  };
 
-
-    setShowResult(true)
-    
-    if (isCorrect) {
-      setScore(score + 10)
-      setCorrectAnswers(correctAnswers + 1)
-      toast.success('Excellent reading! Great job! 📚')
-      saveProgress(selectedModule, selectedLevel, currentExercise, true)
+  const handleNextExercise = () => {
+    if (currentExercise < selectedLesson.exercises.length - 1) {
+      setCurrentExercise(prev => prev + 1);
     } else {
-      if (exercise.type === 'story-starter' || exercise.type === 'story-element' || exercise.type === 'character-trait' || exercise.type === 'character-appearance' || exercise.type === 'character-goal') {
-        // For creative exercises, give encouragement rather than marking as wrong
-        toast.success('Great creativity! Keep writing! ✏️')
-        setScore(score + 5)
-        saveProgress(selectedModule, selectedLevel, currentExercise, true)
-      } else {
-        toast.error('Not quite right. Try again!')
-        saveProgress(selectedModule, selectedLevel, currentExercise, false)
-      }
+      setShowResults(true);
     }
+  };
 
-    setTimeout(() => {
-      nextExercise()
-    }, 2000)
-  }
-
-  const nextExercise = () => {
-    const module = READING_MODULES[selectedModule]
-    const level = module.levels[selectedLevel]
+  const handleCompleteLesson = () => {
+    const lessonId = selectedLesson.id;
+    const moduleId = selectedModule.id;
     
-    if (currentExercise < level.exercises.length - 1) {
-      setCurrentExercise(currentExercise + 1)
-      setUserAnswer('')
-      setShowResult(false)
-      setStoryText('');
-
+    // Calculate score
+    const totalExercises = selectedLesson.exercises.length;
+    const correctAnswers = selectedLesson.exercises.filter((exercise, index) => 
+      userAnswers[index] === exercise.correct
+    ).length;
+    const score = Math.round((correctAnswers / totalExercises) * 100);
+    
+    // Update progress
+    const newProgress = {
+      ...progress,
+      [lessonId]: { score, completed: true, timestamp: new Date().toISOString() }
+    };
+    
+    const newCompleted = new Set(completedLessons);
+    newCompleted.add(lessonId);
+    
+    setProgress(newProgress);
+    setCompletedLessons(newCompleted);
+    saveProgress(newProgress, newCompleted);
+    
+    // Show success message
+    if (score >= 80) {
+      toast.success(`🎉 Excellent work! You scored ${score}% on ${selectedLesson.title}`);
+    } else if (score >= 60) {
+      toast.success(`👍 Good job! You scored ${score}% on ${selectedLesson.title}`);
     } else {
-      setExerciseComplete(true)
-      const percentage = Math.round((correctAnswers / level.exercises.length) * 100)
-      
-      if (percentage >= 90) {
-        toast.success(`Outstanding reading skills! ${percentage}% correct! 🏆`)
-      } else if (percentage >= 70) {
-        toast.success(`Great reading progress! ${percentage}% correct! 🌟`)
-      } else {
-        toast.warning(`Keep practicing your reading! ${percentage}% correct. 📖`)
-      }
+      toast.info(`📚 Keep practicing! You scored ${score}% on ${selectedLesson.title}`);
     }
-  }
+    
+    // Return to module view
+    setSelectedLesson(null);
+    setCurrentExercise(0);
+    setUserAnswers({});
+    setShowResults(false);
+  };
 
-  const resetLevel = () => {
-    setCurrentExercise(0)
-    setUserAnswer('')
-    setShowResult(false)
-    setScore(0)
-    setCorrectAnswers(0)
-    setExerciseComplete(false)
-    setStoryText('')
-    setSelectedOptions([])
-  }
+  const getModuleProgress = (module) => {
+    const totalLessons = module.lessons.length;
+    const completedCount = module.lessons.filter(lesson => 
+      completedLessons.has(lesson.id)
+    ).length;
+    return Math.round((completedCount / totalLessons) * 100);
+  };
 
-  const handleOptionToggle = (option) => {
-    setSelectedOptions(prev => 
-      prev.includes(option) 
-        ? prev.filter(item => item !== option)
-        : [...prev, option]
-    )
-  }
+  const getCurrentExercise = () => {
+    if (!selectedLesson || !selectedLesson.exercises) return null;
+    return selectedLesson.exercises[currentExercise];
+  };
 
   const renderExercise = () => {
-    const module = READING_MODULES[selectedModule]
-    const level = module.levels[selectedLevel]
-    const exercise = level.exercises[currentExercise]
-
-    switch (exercise.type) {
-      case 'phonics-match':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              What sound does the letter "{exercise.letter}" make?
-            </h3>
-            <div className="w-32 h-32 bg-gradient-to-br from-primary to-accent rounded-3xl flex items-center justify-center mx-auto mb-6 text-6xl font-bold text-white shadow-game animate-pulse-slow">
-              {exercise.letter}
-            </div>
-            <div className="grid grid-cols-1 gap-4 max-w-md mx-auto">
-              {exercise.words.map((word, index) => (
-                <button
-                  key={index}
-                  onClick={() => setUserAnswer(exercise.letter.toLowerCase())}
-                  className="p-4 bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 rounded-xl text-surface-800 dark:text-white font-semibold hover:border-primary transition-all duration-300 flex items-center space-x-3"
-                >
-                  <span className="text-2xl">🔊</span>
-                  <span>{word}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'blend-words':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Blend these sounds together:
-            </h3>
-            <div className="flex items-center justify-center space-x-4 mb-6">
-              {exercise.sounds.map((sound, index) => (
-                <div key={index} className="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-game">
-                  {sound}
-                </div>
-              ))}
-              <div className="text-4xl text-primary mx-4">→</div>
-              <div className="w-24 h-16 border-2 border-dashed border-surface-400 rounded-xl flex items-center justify-center text-surface-400 text-lg">
-                ?
-              </div>
-            </div>
-            <input
-              type="text"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="What word?"
-              className="w-40 px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white text-center text-xl font-bold focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'word-picture':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Which word matches this picture?
-            </h3>
-            <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-primary to-accent rounded-3xl flex items-center justify-center text-6xl shadow-game">
-              {exercise.image}
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'story-comprehension':
-      case 'main-idea':
-      case 'detail-question':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Read the story and answer the question:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.story || exercise.passage}
-              </p>
-            </div>
-            <h4 className="text-xl font-semibold text-surface-800 dark:text-white mb-4">
-              {exercise.question}
-            </h4>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'rhyme-match':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Which words rhyme with "{exercise.word}"?
-            </h3>
-            <div className="w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mx-auto mb-6 text-white text-xl font-bold shadow-game">
-              {exercise.word}
-            </div>
-            <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-              {[...exercise.rhymes, exercise.nonRhyme].sort().map((word) => (
-                <button
-                  key={word}
-                  onClick={() => handleOptionToggle(word)}
-                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedOptions.includes(word)
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {word}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'story-starter':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Continue this story:
-            </h3>
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white font-medium">
-                {exercise.prompt}
-              </p>
-            </div>
-            <textarea
-              value={storyText}
-              onChange={(e) => setStoryText(e.target.value)}
-              placeholder="Write your story here..."
-              rows={6}
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
-              disabled={showResult}
-            />
-            <p className="text-sm text-surface-600 dark:text-surface-400 mt-2">
-              Write at least {exercise.minWords} words. Current: {storyText.split(' ').filter(word => word.length > 0).length}
-            </p>
-          </div>
-        )
-
-      case 'sentence-order':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Put these words in the correct order:
-            </h3>
-            <div className="flex flex-wrap justify-center gap-3 mb-6">
-              {exercise.words.sort(() => Math.random() - 0.5).map((word, index) => (
-                <div
-                  key={index}
-                  className="px-4 py-2 bg-gradient-to-br from-secondary to-accent text-white rounded-xl font-semibold shadow-game cursor-move"
-                >
-                  {word}
-                </div>
-              ))}
-            </div>
-            <input
-              type="text"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Type the sentence here..."
-              className="w-full max-w-md px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white text-center focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'synonym-match':
-      case 'antonym-match':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              {exercise.type === 'synonym-match' ? 'Find a word with similar meaning:' : 'Find a word with opposite meaning:'}
-            </h3>
-            <div className="w-32 h-32 bg-gradient-to-br from-primary to-accent rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-xl font-bold shadow-game">
-              {exercise.word}
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'context-clue':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Fill in the blank using context clues:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'sight-word-flash':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Which sight word is this?
-            </h3>
-            <div className="w-40 h-24 bg-gradient-to-br from-red-400 to-red-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold shadow-game animate-pulse-slow">
-              {exercise.word}
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'word-family':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Which words belong to the "{exercise.family}" family?
-            </h3>
-            <div className="w-24 h-24 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
-              {exercise.family}
-            </div>
-            <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-              {[...exercise.words, exercise.nonFamily].sort().map((word) => (
-                <button
-                  key={word}
-                  onClick={() => handleOptionToggle(word)}
-                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedOptions.includes(word)
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {word}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'fluency-read':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Read the sentence and click each word in order:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-xl text-surface-800 dark:text-white font-medium">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-3">
-              {exercise.words.map((word, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleOptionToggle(word)}
-                  className={`px-4 py-2 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedOptions.includes(word)
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {word}
-                </button>
-              ))}
-            </div>
-            <p className="text-sm text-surface-600 dark:text-surface-400 mt-4">
-              Selected: {selectedOptions.length}/{exercise.words.length} words
-            </p>
-          </div>
-        )
-
-      case 'noun-category':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              What type of noun is "{exercise.word}"?
-            </h3>
-            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
-              {exercise.word}
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'verb-tense':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              What tense is "{exercise.word}"?
-            </h3>
-            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
-              {exercise.word}
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'action-verb':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Complete the sentence with the correct action verb:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'adjective-sentence':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Complete the sentence with the correct adjective:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'compare-adjectives':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              What type of comparison is "{exercise.word}"?
-            </h3>
-            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
-              {exercise.word}
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'pronoun-replace':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Replace the noun with the correct pronoun:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'possessive-pronoun':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Complete with the correct possessive pronoun:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'adverb-sentence':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Complete the sentence with the correct adverb:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'adverb-question':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Answer the question with an adverb:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.question}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'identify-all-parts':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Identify the parts of speech in this sentence:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {exercise.words.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleOptionToggle(`${item.word}-${item.part}`)}
-                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedOptions.includes(`${item.word}-${item.part}`)
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  <span className="font-bold">{item.word}</span> - {item.part}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'complete-sentence':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Complete the sentence:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <textarea
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Complete the sentence..."
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'sort-parts':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Sort these words by their parts of speech:
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-              {exercise.words.map((word, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleOptionToggle(word)}
-                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedOptions.includes(word)
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {word}
-                </button>
-              ))}
-            </div>
-            <p className="text-sm text-surface-600 dark:text-surface-400">
-              Click words to select them. Selected: {selectedOptions.length}/{exercise.words.length}
-            </p>
-          </div>
-        )
-
-      case 'period-choice':
-      case 'question-choice':
-      case 'exclamation-choice':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              What punctuation mark should end this sentence?
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`w-16 h-16 rounded-xl font-bold text-2xl transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'statement-identify':
-      case 'question-identify':
-      case 'exclamation-identify':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              What type of sentence is this?
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'comma-list':
-      case 'comma-address':
-      case 'comma-compound':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Add commas to this sentence:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <input
-              type="text"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Type the corrected sentence..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'comma-placement':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Where should the commas go?
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <input
-              type="text"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Type the corrected sentence..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'comma-series':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Complete the sentence with commas in the series:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                Items: {exercise.items.join(', ')}
-              </p>
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed mt-2">
-                {exercise.sentence}
-              </p>
-            </div>
-            <input
-              type="text"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Complete the sentence..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'contraction':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              What is the contraction for "{exercise.words}"?
-            </h3>
-            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-sm font-bold shadow-game">
-              {exercise.words}
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'possession':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              How do you show possession for "{exercise.phrase}"?
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500 max-w-md mx-auto">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.phrase}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'apostrophe-choice':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Add the apostrophe to make this sentence correct:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'expand-contraction':
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              What does "{exercise.contraction}" stand for?
-            </h3>
-            <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-white text-lg font-bold shadow-game">
-              {exercise.contraction}
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'punctuation-mixed':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              What punctuation mark should end this sentence?
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              {exercise.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => setUserAnswer(option)}
-                  className={`w-16 h-16 rounded-xl font-bold text-2xl transition-all duration-300 ${
-                    userAnswer === option
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-
-      case 'multiple-punctuation':
-      case 'comma-and-period':
-      case 'dialogue-punctuation':
-      case 'punctuation-paragraph':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Add the correct punctuation:
-            </h3>
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white leading-relaxed">
-                {exercise.sentence || exercise.text}
-              </p>
-            </div>
-            <input
-              type="text"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Type the corrected sentence..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'story-element':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Story Element: {exercise.element}
-            </h3>
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-surface-700 dark:to-surface-600 rounded-2xl p-6 mb-6 border border-surface-200 dark:border-surface-500">
-              <p className="text-lg text-surface-800 dark:text-white font-medium mb-4">
-                {exercise.question}
-              </p>
-              <p className="text-sm text-surface-600 dark:text-surface-400">
-                Example: {exercise.example}
-              </p>
-            </div>
-            <textarea
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Describe your story element..."
-              rows={4}
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'character-trait':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              {exercise.question}
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-              {exercise.traits.map((trait) => (
-                <button
-                  key={trait}
-                  onClick={() => handleOptionToggle(trait)}
-                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedOptions.includes(trait)
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {trait}
-                </button>
-              ))}
-            </div>
-            <textarea
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Describe your character's personality..."
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'character-appearance':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              {exercise.question}
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-              {exercise.features.map((feature) => (
-                <button
-                  key={feature}
-                  onClick={() => handleOptionToggle(feature)}
-                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedOptions.includes(feature)
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {feature}
-                </button>
-              ))}
-            </div>
-            <textarea
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Describe what your character looks like..."
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      case 'character-goal':
-        return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              {exercise.question}
-            </h3>
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              {exercise.goals.map((goal) => (
-                <button
-                  key={goal}
-                  onClick={() => handleOptionToggle(goal)}
-                  className={`p-3 rounded-xl font-semibold transition-all duration-300 ${
-                    selectedOptions.includes(goal)
-                      ? 'bg-primary text-white shadow-game'
-                      : 'bg-white dark:bg-surface-700 border-2 border-surface-200 dark:border-surface-600 text-surface-800 dark:text-white hover:border-primary/50'
-                  }`}
-                  disabled={showResult}
-                >
-                  {goal}
-                </button>
-              ))}
-            </div>
-            <textarea
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Describe what your character wants to achieve..."
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl border-2 border-surface-200 dark:border-surface-600 bg-white dark:bg-surface-700 text-surface-800 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-300 resize-none"
-              disabled={showResult}
-            />
-          </div>
-        )
-
-      default:
-        return (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-surface-800 dark:text-white mb-6">
-              Exercise coming soon!
-            </h3>
-          </div>
-        )
-
-    }
-  }
-
-  if (exerciseComplete) {
-    const module = READING_MODULES[selectedModule]
-    const level = module.levels[selectedLevel]
-    const percentage = Math.round((correctAnswers / level.exercises.length) * 100)
+    const exercise = getCurrentExercise();
+    if (!exercise) return null;
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-surface-900 dark:via-surface-800 dark:to-surface-900 flex items-center justify-center">
-        <motion.div
-          className="bg-white/70 dark:bg-surface-800/70 backdrop-blur-sm rounded-3xl p-8 shadow-floating border border-white/20 dark:border-surface-700/50 text-center max-w-md mx-auto"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white dark:bg-surface-800 rounded-2xl p-8 shadow-soft"
+      >
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium text-surface-600 dark:text-surface-400">
+              Exercise {currentExercise + 1} of {selectedLesson.exercises.length}
+            </span>
+            <div className="flex items-center space-x-2">
+              {Array.from({ length: selectedLesson.exercises.length }).map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-3 h-3 rounded-full ${
+                    index <= currentExercise
+                      ? 'bg-primary-500'
+                      : 'bg-surface-200 dark:bg-surface-600'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+          
+          {exercise.passage && (
+            <div className="mb-6 p-4 bg-surface-50 dark:bg-surface-700 rounded-xl">
+              <h4 className="font-semibold mb-2 text-surface-900 dark:text-surface-100">
+                Read the passage:
+              </h4>
+              <p className="text-surface-700 dark:text-surface-300 leading-relaxed">
+                {exercise.passage}
+              </p>
+            </div>
+          )}
+          
+          <h3 className="text-xl font-bold text-surface-900 dark:text-surface-100 mb-4">
+            {exercise.question}
+          </h3>
+          
+          {exercise.instruction && (
+            <p className="text-surface-600 dark:text-surface-400 mb-4 italic">
+              {exercise.instruction}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-3 mb-6">
+          {exercise.options?.map((option, index) => (
+            <motion.button
+              key={index}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => handleAnswerSelect(currentExercise, index)}
+              className={`w-full p-4 text-left rounded-xl border-2 transition-all ${
+                userAnswers[currentExercise] === index
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                  : 'border-surface-200 dark:border-surface-600 hover:border-primary-300'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                  userAnswers[currentExercise] === index
+                    ? 'border-primary-500 bg-primary-500'
+                    : 'border-surface-300 dark:border-surface-500'
+                }`}>
+                  {userAnswers[currentExercise] === index && (
+                    <CheckCircle className="w-4 h-4 text-white" />
+                  )}
+                </div>
+                <span className="text-surface-900 dark:text-surface-100">{option}</span>
+              </div>
+            </motion.button>
+          ))}
+        </div>
+
+        <div className="flex justify-between">
+          <button
+            onClick={() => setCurrentExercise(prev => Math.max(0, prev - 1))}
+            disabled={currentExercise === 0}
+            className="px-6 py-3 bg-surface-100 dark:bg-surface-700 text-surface-700 dark:text-surface-300 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-200 dark:hover:bg-surface-600 transition-colors"
+          >
+            Previous
+          </button>
+          
+          <button
+            onClick={handleNextExercise}
+            disabled={userAnswers[currentExercise] === undefined}
+            className="px-6 py-3 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {currentExercise === selectedLesson.exercises.length - 1 ? 'Finish' : 'Next'}
+          </button>
+        </div>
+      </motion.div>
+    );
+  };
+
+  const renderResults = () => {
+    const totalExercises = selectedLesson.exercises.length;
+    const correctAnswers = selectedLesson.exercises.filter((exercise, index) => 
+      userAnswers[index] === exercise.correct
+    ).length;
+    const score = Math.round((correctAnswers / totalExercises) * 100);
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-white dark:bg-surface-800 rounded-2xl p-8 shadow-soft text-center"
+      >
+        <div className={`w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center ${
+          score >= 80 ? 'bg-green-100 text-green-600' :
+          score >= 60 ? 'bg-yellow-100 text-yellow-600' :
+          'bg-red-100 text-red-600'
+        }`}>
+          {score >= 80 ? <Trophy className="w-10 h-10" /> :
+           score >= 60 ? <Award className="w-10 h-10" /> :
+           <Target className="w-10 h-10" />}
+        </div>
+        
+        <h3 className="text-2xl font-bold text-surface-900 dark:text-surface-100 mb-2">
+          Lesson Complete!
+        </h3>
+        
+        <div className="text-4xl font-bold mb-4">
+          <span className={score >= 80 ? 'text-green-600' :
+                         score >= 60 ? 'text-yellow-600' :
+                         'text-red-600'}>
+            {score}%
+          </span>
+        </div>
+        
+        <p className="text-surface-600 dark:text-surface-400 mb-6">
+          You got {correctAnswers} out of {totalExercises} questions correct.
+        </p>
+        
+        <div className="space-y-4 mb-8">
+          {selectedLesson.exercises.map((exercise, index) => {
+            const isCorrect = userAnswers[index] === exercise.correct;
+            return (
+              <div key={index} className="text-left p-4 bg-surface-50 dark:bg-surface-700 rounded-xl">
+                <div className="flex items-start space-x-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center mt-0.5 ${
+                    isCorrect ? 'bg-green-500' : 'bg-red-500'
+                  }`}>
+                    {isCorrect ? (
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    ) : (
+                      <span className="text-white text-sm font-bold">✕</span>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-surface-900 dark:text-surface-100 font-medium mb-1">
+                      {exercise.question}
+                    </p>
+                    <p className="text-surface-600 dark:text-surface-400 text-sm">
+                      {exercise.explanation}
+                    </p>
+                    {!isCorrect && (
+                      <p className="text-red-600 text-sm mt-1">
+                        Correct answer: {exercise.options[exercise.correct]}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        
+        <button
+          onClick={handleCompleteLesson}
+          className="px-8 py-3 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors"
         >
-          <div className={`w-20 h-20 bg-gradient-to-br ${module.color} rounded-full flex items-center justify-center mx-auto mb-6`}>
-            <ApperIcon name="CheckCircle" className="w-10 h-10 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-surface-800 dark:text-white mb-4">
-            Level Complete!
-          </h2>
-          <p className="text-lg text-surface-600 dark:text-surface-300 mb-6">
-            You scored {percentage}% on {level.name}
-          </p>
-          <div className="flex space-x-4">
+          Continue Learning
+        </button>
+      </motion.div>
+    );
+  };
+
+  if (showResults) {
+    return (
+      <div className="min-h-screen bg-surface-50 dark:bg-surface-900 p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
             <button
-              onClick={resetLevel}
-              className="px-6 py-3 bg-gradient-to-r from-secondary to-accent text-white rounded-xl font-semibold shadow-game hover:shadow-floating transition-all duration-300"
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
             >
-              Try Again
+              <Home className="w-5 h-5" />
+              <span>Home</span>
             </button>
-            <button
-              onClick={() => setSelectedLevel(null)}
-              className="px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-semibold shadow-game hover:shadow-floating transition-all duration-300"
-            >
-              Back to Levels
-            </button>
+            <h1 className="text-3xl font-bold text-gradient">
+              Reading Modules
+            </h1>
+            <div className="w-20" /> {/* Spacer */}
           </div>
-        </motion.div>
+          {renderResults()}
+        </div>
       </div>
-    )
+    );
   }
 
+  if (selectedLesson) {
+    return (
+      <div className="min-h-screen bg-surface-50 dark:bg-surface-900 p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <button
+              onClick={() => setSelectedLesson(null)}
+              className="flex items-center space-x-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to {selectedModule.title}</span>
+            </button>
+            <h1 className="text-2xl font-bold text-surface-900 dark:text-surface-100">
+              {selectedLesson.title}
+            </h1>
+            <div className="flex items-center space-x-2 text-surface-600 dark:text-surface-400">
+              <Clock className="w-4 h-4" />
+              <span className="text-sm">{selectedLesson.duration}</span>
+            </div>
+          </div>
+          {renderExercise()}
+        </div>
+      </div>
+    );
+  }
 
-}
+  if (selectedModule) {
+    return (
+      <div className="min-h-screen bg-surface-50 dark:bg-surface-900 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <button
+              onClick={() => setSelectedModule(null)}
+              className="flex items-center space-x-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Modules</span>
+            </button>
+            <h1 className="text-3xl font-bold text-gradient">
+              {selectedModule.title}
+            </h1>
+            <div className="w-32" /> {/* Spacer */}
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {selectedModule.lessons.map((lesson, index) => {
+              const isCompleted = completedLessons.has(lesson.id);
+              const lessonProgress = progress[lesson.id];
+              
+              return (
+                <motion.div
+                  key={lesson.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white dark:bg-surface-800 rounded-2xl p-6 shadow-soft hover:shadow-card transition-all duration-300 cursor-pointer game-card-hover"
+                  onClick={() => handleLessonSelect(lesson)}
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${selectedModule.color} flex items-center justify-center`}>
+                      {isCompleted ? (
+                        <CheckCircle className="w-6 h-6 text-white" />
+                      ) : (
+                        <Play className="w-6 h-6 text-white" />
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Clock className="w-4 h-4 text-surface-400" />
+                      <span className="text-sm text-surface-500 dark:text-surface-400">
+                        {lesson.duration}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-xl font-bold text-surface-900 dark:text-surface-100 mb-2">
+                    {lesson.title}
+                  </h3>
+                  
+                  <p className="text-surface-600 dark:text-surface-400 mb-4">
+                    {lesson.description}
+                  </p>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      {isCompleted ? (
+                        <>
+                          <Star className="w-4 h-4 text-yellow-500" />
+                          <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
+                            {lessonProgress?.score}% Complete
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-sm text-surface-500 dark:text-surface-400">
+                          {lesson.exercises.length} exercises
+                        </span>
+                      )}
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-surface-400" />
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-900 p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center space-x-2 text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
+          >
+            <Home className="w-5 h-5" />
+            <span>Home</span>
+          </button>
+          <h1 className="text-4xl font-bold text-gradient">
+            Reading Modules
+          </h1>
+          <div className="w-20" /> {/* Spacer */}
+        </div>
+
+        <div className="text-center mb-12">
+          <p className="text-xl text-surface-600 dark:text-surface-400 max-w-3xl mx-auto">
+            Master essential reading skills through interactive lessons and engaging exercises.
+            Build confidence in phonics, comprehension, vocabulary, and fluency.
+          </p>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+          {readingModules.map((module, index) => {
+            const Icon = module.icon;
+            const moduleProgress = getModuleProgress(module);
+            const completedLessonsCount = module.lessons.filter(lesson => 
+              completedLessons.has(lesson.id)
+            ).length;
+            
+            return (
+              <motion.div
+                key={module.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.15 }}
+                className="bg-white dark:bg-surface-800 rounded-3xl p-8 shadow-soft hover:shadow-floating transition-all duration-500 cursor-pointer game-card-hover"
+                onClick={() => handleModuleSelect(module)}
+              >
+                <div className="flex items-start justify-between mb-6">
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${module.color} flex items-center justify-center shadow-lg`}>
+                    <Icon className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-surface-900 dark:text-surface-100">
+                      {moduleProgress}%
+                    </div>
+                    <div className="text-sm text-surface-500 dark:text-surface-400">
+                      Complete
+                    </div>
+                  </div>
+                </div>
+                
+                <h2 className="text-2xl font-bold text-surface-900 dark:text-surface-100 mb-3">
+                  {module.title}
+                </h2>
+                
+                <p className="text-surface-600 dark:text-surface-400 mb-6 leading-relaxed">
+                  {module.description}
+                </p>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-surface-500 dark:text-surface-400">
+                      Progress
+                    </span>
+                    <span className="text-surface-700 dark:text-surface-300 font-medium">
+                      {completedLessonsCount} of {module.lessons.length} lessons
+                    </span>
+                  </div>
+                  
+                  <div className="w-full bg-surface-200 dark:bg-surface-700 rounded-full h-2">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${moduleProgress}%` }}
+                      transition={{ duration: 1, delay: index * 0.2 }}
+                      className={`h-2 rounded-full bg-gradient-to-r ${module.color}`}
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between mt-6">
+                  <div className="flex items-center space-x-4 text-sm text-surface-500 dark:text-surface-400">
+                    <div className="flex items-center space-x-1">
+                      <BookOpen className="w-4 h-4" />
+                      <span>{module.lessons.length} lessons</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <BarChart3 className="w-4 h-4" />
+                      <span>{moduleProgress > 0 ? 'In Progress' : 'Start Learning'}</span>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-6 h-6 text-surface-400" />
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ReadingModules;
